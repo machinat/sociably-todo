@@ -14,13 +14,26 @@ export type ChatEventContext =
   | TelegramEventContext
   | LineEventContext;
 
-export type HelloEventValue = {
-  category: 'greeting';
-  type: 'hello';
-  payload: string;
+export type Todo = {
+  id: number;
+  name: string;
 };
 
-export type WebAppEventValue = ConnectionEventValue | HelloEventValue;
+export type TodoState = {
+  currentId: number;
+  history: { id: number; name: string; finishAt: number }[];
+  todos: Todo[];
+};
+
+export type WebDeleteAction = {
+  category: 'action';
+  type: 'delete_todo';
+  payload: {
+    id: number;
+  };
+};
+
+export type WebAppEventValue = ConnectionEventValue | WebDeleteAction;
 
 export type WebAppEventContext = WebviewEventContext<
   MessengerServerAuthorizer | TelegramServerAuthorizer | LineServerAuthorizer,
@@ -28,3 +41,21 @@ export type WebAppEventContext = WebviewEventContext<
 >;
 
 export type AppEventContext = ChatEventContext | WebAppEventContext;
+
+export type WebDataPush = {
+  category: 'push';
+  type: 'todo_data';
+  payload: {
+    state: TodoState;
+  };
+};
+
+export type WebDeletedPush = {
+  category: 'push';
+  type: 'todo_deleted';
+  payload: {
+    todo: Todo;
+  };
+};
+
+export type WebAppPush = WebDataPush | WebDeletedPush;

@@ -9,7 +9,11 @@ import TelegramAuthorizer from '@machinat/telegram/webview';
 import Webview from '@machinat/webview';
 import RedisState from '@machinat/redis-state';
 import { FileState } from '@machinat/local-state';
+import Script from '@machinat/script';
+import AddingTodo from './scenes/AddingTodo';
 import { ServerDomain, LineLiffId } from './interface';
+import TodoController from './services/TodoController';
+import useProfilerFactory from './services/useProfileFactory';
 import nextConfigs from './webview/next.config.js';
 import { WebAppEventValue } from './types';
 
@@ -58,6 +62,10 @@ const app = Machinat.createApp({
             url: REDIS_URL,
           },
         }),
+
+    Script.initModule({
+      libs: [AddingTodo],
+    }),
   ],
 
   platforms: [
@@ -114,6 +122,8 @@ const app = Machinat.createApp({
     { provide: Webview.AuthorizerList, withProvider: TelegramAuthorizer },
     { provide: Webview.AuthorizerList, withProvider: LineAuthorizer },
 
+    TodoController,
+    useProfilerFactory,
     { provide: ServerDomain, withValue: DOMAIN },
     { provide: LineLiffId, withValue: LINE_LIFF_ID },
   ],

@@ -1,49 +1,46 @@
-import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
 import { Stream } from '@machinat/stream';
 import { filter } from '@machinat/stream/operators';
-import WithWebviewLink from './components/WithWebviewLink';
-import type {
-  AppEventContext,
-  ChatEventContext,
-  WebAppEventContext,
-} from './types';
+import Script from '@machinat/script';
+import handleMessage from './handlers/handleMessage';
+import handlePostback from './handlers/handlePostback';
+import handleWebview from './handlers/handleWebview';
+import type { AppEventContext, ChatEventContext } from './types';
 
-const main = (event$: Stream<AppEventContext>): void => {
-  event$
-    .pipe(filter(({ event }) => event.category === 'message'))
-    .subscribe(async ({ event, reply }: ChatEventContext) => {
-      await reply(
-        <WithWebviewLink>
-          Hello {event.type === 'text' ? event.text : 'World'}!
-        </WithWebviewLink>
-      );
-    });
-
-  event$
-    .pipe(filter(({ event }) => event.platform === 'webview'))
-    .subscribe(
-      makeContainer({ deps: [Machinat.BaseBot] })(
-        (baseBot) => async (context: WebAppEventContext) => {
-          const { event, bot: webviewBot, metadata: { auth } } = context;
-
-          if (event.type === 'connect') {
-            // send hello when webview connection connect
-            await webviewBot.send(event.channel, {
-              category: 'greeting',
-              type: 'hello',
-              payload: `Hello, user from ${auth.platform}!`,
-            });
-          } else if (event.type === 'hello') {
-            // reflect hello to chatroom
-            await baseBot.render(
-              auth.channel,
-              <WithWebviewLink>Hello {event.payload}!</WithWebviewLink>
-            );
+const main = (event$: Stream<AppEventContext>) => {
+  const chat$ = event$.pipe(
+    filter((ctx): ctx is ChatEventContext => ctx.platform !== 'webview'),
+    filter(
+      makeContainer({ deps: [Script.Processor] })(
+        (processor) => async (ctx) => {
+          const runtime = await processor.continue(ctx.event.channel, ctx);
+          if (!runtime) {
+            return true;
           }
+
+          await ctx.reply(runtime.output());
+          return false;
         }
       )
-    );
+    )
+  );
+
+  chat$
+    .pipe(filter((ctx) => ctx.event.category === 'message'))
+    .subscribe(handleMessage);
+
+  chat$
+    .pipe(
+      filter(
+        (ctx) =>
+          ctx.event.type === 'postback' || ctx.event.type === 'callback_query'
+      )
+    )
+    .subscribe(handlePostback);
+
+  event$
+    .pipe(filter((ctx) => ctx.event.platform === 'webview'))
+    .subscribe(handleWebview);
 };
 
 export default main;

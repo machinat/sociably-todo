@@ -5,10 +5,14 @@ import WebviewClient from '@machinat/webview/client';
 import { MessengerClientAuthorizer } from '@machinat/messenger/webview';
 import { TelegramClientAuthorizer } from '@machinat/telegram/webview';
 import { LineClientAuthorizer } from '@machinat/line/webview';
+import { TodoState, WebAppPush } from '../../types';
 
 const { publicRuntimeConfig } = getConfig();
 
-const client =  new WebviewClient(
+const client = new WebviewClient<
+  MessengerClientAuthorizer | TelegramClientAuthorizer | LineClientAuthorizer,
+  WebAppPush
+>(
   typeof window === 'undefined'
     ? { mockupMode: true, authorizers: [] }
     : {
@@ -25,32 +29,51 @@ const client =  new WebviewClient(
 );
 
 const WebAppHome = () => {
-  const [helloWords, setHelloWords] = React.useState(null);
-  const [isButtonTapped, setButtonTapped] = React.useState(false);
+  const [todoState, dispatchState] = React.useReducer(
+    (state: null | TodoState, event: WebAppPush): TodoState => {
+      if (event.type === 'todo_data') {
+        return event.payload.state;
+      } else if (event.type === 'todo_deleted') {
+        const isNotDeleted = (todo) => todo.id !== event.payload.todo.id;
+        return {
+          ...state,
+          todos: state.todos.filter(isNotDeleted),
+          history: state.history.filter(isNotDeleted),
+        };
+      }
+    },
+    null
+  );
 
   React.useEffect(() => {
     client.onEvent(({ event }) => {
-      if (event.type === 'hello') {
-        setHelloWords(event.payload);
-      }
+      dispatchState(event);
     });
   }, []);
 
-  const sayHello = (payload: string) => {
-    client.send({ category: 'greeting', type: 'hello', payload });
-    setButtonTapped(true);
-  };
-  
-  const Button = ({ payload }) => (
-    <button disabled={!client.isConnected} onClick={() => sayHello(payload)}>
-      {payload}
-    </button>
+  const TodoRow = ({ todo }) => (
+    <tr>
+      <td style={{ verticalAlign: 'middle' }}>{todo.name}</td>
+      <td style={{ textAlign: 'right' }}>
+        <button
+          onClick={() =>
+            client.send({
+              category: 'action',
+              type: 'delete_todo',
+              payload: { id: todo.id },
+            })
+          }
+        >
+          ❌
+        </button>
+      </td>
+    </tr>
   );
 
   return (
     <div>
       <Head>
-        <title>Machinat Webview</title>
+        <title>Edit Todos</title>
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
@@ -58,23 +81,37 @@ const WebAppHome = () => {
       </Head>
 
       <main>
-        <h1>Hello In-Chat Webview!</h1>
-        <p>
-          Get started by editing <code>src/webview/pages/index.js</code>
-        </p>
+        <h3>Press ❌ to delete todos</h3>
 
-        <h3>{helloWords || 'connecting... '}</h3>
-        <p>{
-          isButtonTapped
-            ? 'Great! Check the chatroom 👍'
-            : client.isConnected
-            ? 'Tap a button 👇'
-            : ''
-        }</p>
-        <div>
-          <Button payload="Foo" />
-          <Button payload="Bar" />
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th colSpan={2}>
+                You have {todoState ? todoState.todos.length : '?'} Todo
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {todoState?.todos.map((todo) => (
+              <TodoRow todo={todo} />
+            ))}
+          </tbody>
+        </table>
+        <table>
+          <thead>
+            <tr>
+              <th colSpan={2}>
+                You have {todoState ? todoState.history.length : '?'} finished
+                Todo
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {todoState?.history.map((todo) => (
+              <TodoRow todo={todo} />
+            ))}
+          </tbody>
+        </table>
       </main>
     </div>
   );
