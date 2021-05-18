@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { parse as parseUrl } from 'url';
 import { config as configEnv } from 'dotenv';
 import localtunnel from 'localtunnel';
 import nodemon from 'nodemon';
@@ -17,6 +18,16 @@ async function dev() {
     tunnel.close();
     process.exit();
   });
+
+  if (
+    parseUrl(tunnel.url).hostname !== `${DEV_TUNNEL_SUBDOMAIN}.t.machinat.dev`
+  ) {
+    console.log(
+      `[dev:tunnel] Error: subdomain "${DEV_TUNNEL_SUBDOMAIN}" is not available, please try later or change the subdomain setting (need rerun migrations)`
+    );
+    tunnel.close();
+    process.exit(1);
+  }
 
   console.log(
     `[dev:tunnel] Tunnel from ${tunnel.url} to http://localhost:${PORT} is opened`
