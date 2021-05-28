@@ -28,18 +28,40 @@ const client = new WebviewClient<
       }
 );
 
+const TodoRow = ({ todo }) => (
+  <tr>
+    <td style={{ verticalAlign: 'middle' }}>{todo.name}</td>
+    <td style={{ textAlign: 'right' }}>
+      <button
+        onClick={() =>
+          client.send({
+            category: 'action',
+            type: 'delete_todo',
+            payload: { id: todo.id },
+          })
+        }
+      >
+        ❌
+      </button>
+    </td>
+  </tr>
+);
+
 const WebAppHome = () => {
   const [todoState, dispatchState] = React.useReducer(
     (state: null | TodoState, event: WebAppPush): TodoState => {
-      if (event.type === 'todo_data') {
-        return event.payload.state;
-      } else if (event.type === 'todo_deleted') {
-        const isNotDeleted = (todo) => todo.id !== event.payload.todo.id;
-        return {
-          ...state,
-          todos: state.todos.filter(isNotDeleted),
-          history: state.history.filter(isNotDeleted),
-        };
+      switch (event.type) {
+        case 'todo_data':
+          return event.payload.state;
+        case 'todo_deleted':
+          return {
+            ...state,
+            todos: state.todos.filter(
+              (todo) => todo.id !== event.payload.todo.id
+            ),
+          };
+        default:
+          return state;
       }
     },
     null
@@ -51,24 +73,8 @@ const WebAppHome = () => {
     });
   }, []);
 
-  const TodoRow = ({ todo }) => (
-    <tr>
-      <td style={{ verticalAlign: 'middle' }}>{todo.name}</td>
-      <td style={{ textAlign: 'right' }}>
-        <button
-          onClick={() =>
-            client.send({
-              category: 'action',
-              type: 'delete_todo',
-              payload: { id: todo.id },
-            })
-          }
-        >
-          ❌
-        </button>
-      </td>
-    </tr>
-  );
+  const todos = todoState?.todos.filter((todo) => !todo.finishAt);
+  const history = todoState?.todos.filter((todo) => todo.finishAt);
 
   return (
     <div>
@@ -86,13 +92,11 @@ const WebAppHome = () => {
         <table>
           <thead>
             <tr>
-              <th colSpan={2}>
-                You have {todoState ? todoState.todos.length : '?'} Todo
-              </th>
+              <th colSpan={2}>You have {todos ? todos.length : '?'} Todo</th>
             </tr>
           </thead>
           <tbody>
-            {todoState?.todos.map((todo) => (
+            {todos?.map((todo) => (
               <TodoRow todo={todo} />
             ))}
           </tbody>
@@ -101,13 +105,12 @@ const WebAppHome = () => {
           <thead>
             <tr>
               <th colSpan={2}>
-                You have {todoState ? todoState.history.length : '?'} finished
-                Todo
+                You have {history ? history.length : '?'} finished Todo
               </th>
             </tr>
           </thead>
           <tbody>
-            {todoState?.history.map((todo) => (
+            {history?.map((todo) => (
               <TodoRow todo={todo} />
             ))}
           </tbody>

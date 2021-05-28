@@ -3,8 +3,8 @@ import { makeContainer } from '@machinat/core/service';
 import { StartRuntime } from '@machinat/script';
 import TodoController from '../services/TodoController';
 import AddingTodo from '../scenes/AddingTodo';
-import AnswerBasePanel from '../components/AnswerBasePanel';
-import AnswerTodoList from '../components/AnswerTodoList';
+import WithRootMenu from '../components/WithRootMenu';
+import ShowTodoList from '../components/ShowTodoList';
 import { ChatEventContext } from '../types';
 
 const handlePostback = makeContainer({ deps: [TodoController] })(
@@ -26,7 +26,10 @@ const handlePostback = makeContainer({ deps: [TodoController] })(
       if (data.action === 'list') {
         const { state } = await todoController.getTodos(event.channel!);
         return reply(
-          <AnswerTodoList state={state} offset={data.offset || 0} />
+          <ShowTodoList
+            todos={state.todos.filter((todo) => !todo.finishAt)}
+            offset={data.offset || 0}
+          />
         );
       }
 
@@ -36,7 +39,7 @@ const handlePostback = makeContainer({ deps: [TodoController] })(
           data.id
         );
         return reply(
-          <AnswerBasePanel state={state}>
+          <WithRootMenu todoCount={state.todos.length}>
             {todo ? (
               <p>
                 Todo "<b>{todo.name}</b>" is done!
@@ -44,7 +47,7 @@ const handlePostback = makeContainer({ deps: [TodoController] })(
             ) : (
               <p>This todo is closed.</p>
             )}
-          </AnswerBasePanel>
+          </WithRootMenu>
         );
       }
     }

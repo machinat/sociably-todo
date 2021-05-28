@@ -2,7 +2,7 @@ import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
 import { build } from '@machinat/script';
 import { $, WHILE, PROMPT, EFFECT } from '@machinat/script/keywords';
-import AnswerBasePanel from '../components/AnswerBasePanel';
+import WithRootMenu from '../components/WithRootMenu';
 import TodoController from '../services/TodoController';
 import { TodoState } from '../types';
 
@@ -48,9 +48,9 @@ export default build<AddTodoVars>(
     />
 
     {async ({ vars: { todoName, state } }) => (
-      <AnswerBasePanel state={state!}>
+      <WithRootMenu todoCount={state!.todos.length}>
         Todo "<b>{todoName}</b>" is added!
-      </AnswerBasePanel>
+      </WithRootMenu>
     )}
   </$>
 );

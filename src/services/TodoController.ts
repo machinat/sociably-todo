@@ -8,8 +8,6 @@ type TodoActionResult = {
   state: TodoState;
 };
 
-const initState = () => ({ currentId: 0, history: [], todos: [] });
-
 export class TodoController {
   stateController: StateController;
 
@@ -24,7 +22,7 @@ export class TodoController {
       .channelState(channel)
       .get<TodoState>('todo_data');
 
-    return { todo: null, state: state || initState() };
+    return { todo: null, state: state || { currentId: 0, todos: [] } };
   }
 
   async addTodo(
@@ -35,10 +33,9 @@ export class TodoController {
       .channelState(channel)
       .update<TodoState>(
         'todo_data',
-        ({ currentId, todos, history } = initState()) => ({
+        ({ currentId, todos } = { currentId: 0, todos: [] }) => ({
           currentId: currentId + 1,
           todos: [...todos, { id: currentId + 1, name }],
-          history,
         })
       );
     return { todo: state.todos[state.todos.length - 1], state };
@@ -54,16 +51,25 @@ export class TodoController {
       .channelState(channel)
       .update<TodoState>(
         'todo_data',
-        ({ currentId, todos, history } = initState()) => {
-          finishingTodo = todos.find((todo) => todo.id === id);
-          if (!finishingTodo) {
-            return { currentId, todos, history };
+        ({ currentId, todos } = { currentId: 0, todos: [] }) => {
+          const todoIdx = todos.findIndex((todo) => todo.id === id);
+          if (todoIdx === -1) {
+            return { currentId, todos };
           }
 
+          const todo = todos[todoIdx];
+          if (todo.finishAt) {
+            return { currentId, todos };
+          }
+
+          finishingTodo = { ...todo, finishAt: Date.now() };
           return {
             currentId: currentId,
-            todos: todos.filter((todo) => todo.id !== id),
-            history: [...history, { ...finishingTodo, finishAt: Date.now() }],
+            todos: [
+              ...todos.slice(0, todoIdx),
+              finishingTodo,
+              ...todos.slice(todoIdx + 1),
+            ],
           };
         }
       );
@@ -80,19 +86,16 @@ export class TodoController {
       .channelState(channel)
       .update<TodoState>(
         'todo_data',
-        ({ currentId, todos, history } = initState()) => {
-          deletingTodo =
-            todos.find((todo) => todo.id === id) ||
-            history.find((todo) => todo.id === id);
+        ({ currentId, todos } = { currentId: 0, todos: [] }) => {
+          deletingTodo = todos.find((todo) => todo.id === id);
 
           if (!deletingTodo) {
-            return { currentId, todos, history };
+            return { currentId, todos };
           }
 
           return {
             currentId: currentId,
             todos: todos.filter((todo) => todo.id !== id),
-            history: history.filter((todo) => todo.id !== id),
           };
         }
       );

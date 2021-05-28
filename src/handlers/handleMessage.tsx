@@ -4,7 +4,7 @@ import { StartRuntime } from '@machinat/script';
 import TodoController from '../services/TodoController';
 import useProfileFactory from '../services/useProfileFactory';
 import AddingTodo from '../scenes/AddingTodo';
-import AnswerBasePanel from '../components/AnswerBasePanel';
+import WithRootMenu from '../components/WithRootMenu';
 import { ChatEventContext } from '../types';
 
 const handleMessage = makeContainer({
@@ -16,7 +16,7 @@ const handleMessage = makeContainer({
       reply,
     }: ChatEventContext & { event: { category: 'message' } }) => {
       if (event.type === 'text') {
-        const matchingAddTodo = event.text.match(/add\s+(todo)?(.*)/i);
+        const matchingAddTodo = event.text.match(/add(\s+todo)?(.*)/i);
         if (matchingAddTodo) {
           const [, , todoName] = matchingAddTodo;
 
@@ -31,11 +31,11 @@ const handleMessage = makeContainer({
             todoName
           );
           return reply(
-            <AnswerBasePanel state={state}>
+            <WithRootMenu todoCount={state.todos.length}>
               <p>
                 Todo "<b>{todoName}</b>" is added!
               </p>
-            </AnswerBasePanel>
+            </WithRootMenu>
           );
         }
       }
@@ -43,9 +43,9 @@ const handleMessage = makeContainer({
       const { state } = await todoController.getTodos(event.channel);
       const profile = await getProfile(event.user!);
       return reply(
-        <AnswerBasePanel state={state}>
+        <WithRootMenu todoCount={state.todos.length}>
           <p>Hello, {profile.name}! I'm a Todo Bot 🤖</p>
-        </AnswerBasePanel>
+        </WithRootMenu>
       );
     }
 );

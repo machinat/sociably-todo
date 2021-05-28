@@ -17,11 +17,11 @@ export type ChatEventContext =
 export type Todo = {
   id: number;
   name: string;
+  finishAt?: number;
 };
 
 export type TodoState = {
   currentId: number;
-  history: { id: number; name: string; finishAt: number }[];
   todos: Todo[];
 };
 

@@ -5,20 +5,20 @@ import * as Telegram from '@machinat/telegram/components';
 import * as Line from '@machinat/line/components';
 import { ServerDomain, LineLiffId } from '../interface';
 
-type BaseTemplateProps = {
+type RootMenuTemplateProps = {
   children: MachinatNode;
 };
 
-const BaseTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
+const RootMenuTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
   (serverDomain, lineLiffId) =>
-    ({ children }: BaseTemplateProps, { platform }) => {
+    ({ children }: RootMenuTemplateProps, { platform }) => {
       const listLabel = 'Show Todos 📑';
       const listData = JSON.stringify({ action: 'list' });
 
       const addLabel = 'New Todo ➕';
       const addData = JSON.stringify({ action: 'add' });
 
-      const manageLable = 'Edit 📤';
+      const editLabel = 'Edit 📤';
 
       if (platform === 'messenger') {
         return (
@@ -32,7 +32,7 @@ const BaseTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
                 <Messenger.PostbackButton title={addLabel} payload={addData} />
                 <Messenger.UrlButton
                   messengerExtensions
-                  title={manageLable}
+                  title={editLabel}
                   url={`https://${serverDomain}/webview?platform=messenger`}
                 />
               </>
@@ -52,7 +52,7 @@ const BaseTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
                 <Telegram.CallbackButton text={addLabel} data={addData} />
                 <Telegram.UrlButton
                   login
-                  text={manageLable}
+                  text={editLabel}
                   url={`https://${serverDomain}/auth/telegram`}
                 />
               </Telegram.InlineKeyboard>
@@ -72,7 +72,7 @@ const BaseTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
                 <Line.PostbackAction label={listLabel} data={listData} />
                 <Line.PostbackAction label={addLabel} data={addData} />
                 <Line.UriAction
-                  label={manageLable}
+                  label={editLabel}
                   uri={`https://liff.line.me/${lineLiffId}`}
                 />
               </>
@@ -87,4 +87,4 @@ const BaseTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
     }
 );
 
-export default BaseTemplate;
+export default RootMenuTemplate;

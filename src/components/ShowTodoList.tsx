@@ -2,38 +2,36 @@ import Machinat from '@machinat/core';
 import * as Messenger from '@machinat/messenger/components';
 import * as Telegram from '@machinat/telegram/components';
 import * as Line from '@machinat/line/components';
-import { TodoState } from '../types';
+import { Todo } from '../types';
 import TodoListTemplate from './TodoListTemplate';
-import AnswerBasePanel from './AnswerBasePanel';
+import WithRootMenu from './WithRootMenu';
 
-type AnswerTodoListProps = {
+type ShowTodoListProps = {
   offset: number;
-  state: TodoState;
+  todos: Todo[];
 };
 
-const AnswerTodoList = (
-  { offset = 0, state }: AnswerTodoListProps,
+const ShowTodoList = (
+  { offset = 0, todos }: ShowTodoListProps,
   { platform }
 ) => {
-  if (state.todos.length === 0) {
-    return (
-      <AnswerBasePanel state={state}>You have no todos now.</AnswerBasePanel>
-    );
+  if (todos.length === 0) {
+    return <WithRootMenu todoCount={todos.length}>{null}</WithRootMenu>;
   }
 
   const summaryMsg =
-    offset === 0 ? <p>You have {state.todos.length} todos:</p> : null;
+    offset === 0 ? <p>You have {todos.length} todos:</p> : null;
 
-  if (state.todos.length <= 10) {
+  if (todos.length <= 10) {
     return (
       <>
         {summaryMsg}
-        <TodoListTemplate todos={state.todos} />
+        <TodoListTemplate todos={todos} />
       </>
     );
   }
 
-  const end = Math.min(state.todos.length, offset + 10);
+  const end = Math.min(todos.length, offset + 10);
   const rangeMessage = `${offset + 1}-${end} are listed.`;
 
   const nextLabel = 'Next 10 ⏩';
@@ -42,9 +40,9 @@ const AnswerTodoList = (
   return (
     <>
       {summaryMsg}
-      <TodoListTemplate todos={state.todos.slice(offset, end)} />
+      <TodoListTemplate todos={todos.slice(offset, end)} />
 
-      {end >= state.todos.length ? (
+      {end >= todos.length ? (
         <p>{rangeMessage}</p>
       ) : platform === 'messenger' ? (
         <Messenger.ButtonTemplate
@@ -78,4 +76,4 @@ const AnswerTodoList = (
   );
 };
 
-export default AnswerTodoList;
+export default ShowTodoList;
