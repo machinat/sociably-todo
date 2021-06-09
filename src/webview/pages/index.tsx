@@ -72,10 +72,10 @@ const WebAppHome = () => {
     client.onEvent(({ event }) => {
       dispatchEvent(event);
     });
-    
-    client.onError(console.error)
+
+    client.onError(console.error);
   }, []);
-  
+
   return (
     <div>
       <Head>
