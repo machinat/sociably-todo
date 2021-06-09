@@ -11,6 +11,7 @@ import RedisState from '@machinat/redis-state';
 import { FileState } from '@machinat/local-state';
 import Script from '@machinat/script';
 import AddingTodo from './scenes/AddingTodo';
+import AskingFirstTodo from './scenes/AskingFirstTodo';
 import { ServerDomain, LineLiffId } from './interface';
 import TodoController from './services/TodoController';
 import useProfilerFactory from './services/useProfileFactory';
@@ -64,7 +65,7 @@ const app = Machinat.createApp({
         }),
 
     Script.initModule({
-      libs: [AddingTodo],
+      libs: [AddingTodo, AskingFirstTodo],
     }),
   ],
 

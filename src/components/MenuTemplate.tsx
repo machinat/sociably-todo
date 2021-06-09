@@ -13,10 +13,10 @@ const RootMenuTemplate = makeContainer({ deps: [ServerDomain, LineLiffId] })(
   (serverDomain, lineLiffId) =>
     ({ children }: RootMenuTemplateProps, { platform }) => {
       const listLabel = 'Show Todos 📑';
-      const listData = JSON.stringify({ action: 'list' });
+      const listData = JSON.stringify({ type: 'list' });
 
       const addLabel = 'New Todo ➕';
-      const addData = JSON.stringify({ action: 'add' });
+      const addData = JSON.stringify({ type: 'add' });
 
       const editLabel = 'Edit 📤';
 

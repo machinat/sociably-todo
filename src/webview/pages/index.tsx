@@ -5,13 +5,13 @@ import WebviewClient from '@machinat/webview/client';
 import { MessengerClientAuthorizer } from '@machinat/messenger/webview';
 import { TelegramClientAuthorizer } from '@machinat/telegram/webview';
 import { LineClientAuthorizer } from '@machinat/line/webview';
-import { TodoState, WebAppPush } from '../../types';
+import { TodoState, WebviewPush } from '../../types';
 
 const { publicRuntimeConfig } = getConfig();
 
 const client = new WebviewClient<
   MessengerClientAuthorizer | TelegramClientAuthorizer | LineClientAuthorizer,
-  WebAppPush
+  WebviewPush
 >(
   typeof window === 'undefined'
     ? { mockupMode: true, authorizers: [] }
@@ -48,34 +48,34 @@ const TodoRow = ({ todo }) => (
 );
 
 const WebAppHome = () => {
-  const [todoState, dispatchState] = React.useReducer(
-    (state: null | TodoState, event: WebAppPush): TodoState => {
-      switch (event.type) {
-        case 'todo_data':
-          return event.payload.state;
-        case 'todo_deleted':
-          return {
-            ...state,
-            todos: state.todos.filter(
-              (todo) => todo.id !== event.payload.todo.id
-            ),
-          };
-        default:
-          return state;
+  const [data, dispatchEvent] = React.useReducer(
+    (data: null | TodoState, event: WebviewPush): TodoState => {
+      if (event.type === 'app_data') {
+        return event.payload.data;
       }
+
+      if (event.type === 'todo_deleted') {
+        const { id } = event.payload.todo;
+        return {
+          ...data,
+          todos: data.todos.filter((todo) => todo.id !== id),
+          finishedTodos: data.finishedTodos.filter((todo) => todo.id !== id),
+        };
+      }
+
+      return data;
     },
     null
   );
 
   React.useEffect(() => {
     client.onEvent(({ event }) => {
-      dispatchState(event);
+      dispatchEvent(event);
     });
+    
+    client.onError(console.error)
   }, []);
-
-  const todos = todoState?.todos.filter((todo) => !todo.finishAt);
-  const history = todoState?.todos.filter((todo) => todo.finishAt);
-
+  
   return (
     <div>
       <Head>
@@ -92,11 +92,13 @@ const WebAppHome = () => {
         <table>
           <thead>
             <tr>
-              <th colSpan={2}>You have {todos ? todos.length : '?'} Todo</th>
+              <th colSpan={2}>
+                You have {data ? data.todos.length : '?'} Todo
+              </th>
             </tr>
           </thead>
           <tbody>
-            {todos?.map((todo) => (
+            {data?.todos.map((todo) => (
               <TodoRow todo={todo} />
             ))}
           </tbody>
@@ -105,12 +107,12 @@ const WebAppHome = () => {
           <thead>
             <tr>
               <th colSpan={2}>
-                You have {history ? history.length : '?'} finished Todo
+                You have {data ? data.finishedTodos.length : '?'} finished Todo
               </th>
             </tr>
           </thead>
           <tbody>
-            {history?.map((todo) => (
+            {data?.finishedTodos.map((todo) => (
               <TodoRow todo={todo} />
             ))}
           </tbody>

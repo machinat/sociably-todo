@@ -4,7 +4,8 @@ import { StartRuntime } from '@machinat/script';
 import TodoController from '../services/TodoController';
 import useProfileFactory from '../services/useProfileFactory';
 import AddingTodo from '../scenes/AddingTodo';
-import WithRootMenu from '../components/WithRootMenu';
+import AskingFirstTodo from '../scenes/AskingFirstTodo';
+import WithMenu from '../components/WithMenu';
 import { ChatEventContext } from '../types';
 
 const handleMessage = makeContainer({
@@ -18,7 +19,7 @@ const handleMessage = makeContainer({
       if (event.type === 'text') {
         const matchingAddTodo = event.text.match(/add(\s+todo)?(.*)/i);
         if (matchingAddTodo) {
-          const [, , todoName] = matchingAddTodo;
+          const todoName = matchingAddTodo[2].trim();
 
           if (!todoName) {
             return reply(
@@ -26,26 +27,33 @@ const handleMessage = makeContainer({
             );
           }
 
-          const { state } = await todoController.addTodo(
+          const { data } = await todoController.addTodo(
             event.channel,
             todoName
           );
           return reply(
-            <WithRootMenu todoCount={state.todos.length}>
+            <WithMenu todoCount={data.todos.length}>
               <p>
                 Todo "<b>{todoName}</b>" is added!
               </p>
-            </WithRootMenu>
+            </WithMenu>
           );
         }
       }
 
-      const { state } = await todoController.getTodos(event.channel);
+      const { data } = await todoController.getTodos(event.channel);
       const profile = await getProfile(event.user!);
+      const helloWords = <p>Hello, {profile.name}! I'm a Todo Bot 🤖</p>;
+
       return reply(
-        <WithRootMenu todoCount={state.todos.length}>
-          <p>Hello, {profile.name}! I'm a Todo Bot 🤖</p>
-        </WithRootMenu>
+        data.todos.length > 0 ? (
+          <WithMenu todoCount={data.todos.length}>{helloWords}</WithMenu>
+        ) : (
+          <>
+            {helloWords}
+            <StartRuntime script={AskingFirstTodo} channel={event.channel} />
+          </>
+        )
       );
     }
 );

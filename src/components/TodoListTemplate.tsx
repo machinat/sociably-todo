@@ -20,7 +20,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
             buttons={
               <Messenger.PostbackButton
                 title={finishLabel}
-                payload={JSON.stringify({ action: 'finish', id: todo.id })}
+                payload={JSON.stringify({ type: 'finish', id: todo.id })}
               />
             }
           />
@@ -38,7 +38,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
               <Telegram.InlineKeyboard>
                 <Telegram.CallbackButton
                   text={finishLabel}
-                  data={JSON.stringify({ action: 'finish', id: todo.id })}
+                  data={JSON.stringify({ type: 'finish', id: todo.id })}
                 />
               </Telegram.InlineKeyboard>
             }
@@ -60,7 +60,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
             actions={
               <Line.PostbackAction
                 label={finishLabel}
-                data={JSON.stringify({ action: 'finish', id: todo.id })}
+                data={JSON.stringify({ type: 'finish', id: todo.id })}
               />
             }
           >

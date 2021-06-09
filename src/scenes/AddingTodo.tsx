@@ -2,26 +2,24 @@ import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
 import { build } from '@machinat/script';
 import { $, WHILE, PROMPT, EFFECT } from '@machinat/script/keywords';
-import WithRootMenu from '../components/WithRootMenu';
+import WithMenu from '../components/WithMenu';
 import TodoController from '../services/TodoController';
-import { TodoState } from '../types';
 
-type AddTodoVars = {
-  id: number;
+type AddingTodoVars = {
   todoName: string;
-  state: null | TodoState;
+  todosCount: number;
 };
 
-export default build<AddTodoVars>(
+export default build<AddingTodoVars>(
   {
-    name: 'AddTodo',
-    initVars: () => ({ id: 0, todoName: '', state: null }),
+    name: 'AddingTodo',
+    initVars: () => ({ todoName: '', todosCount: 0 }),
   },
-  <$<AddTodoVars>>
-    <WHILE<AddTodoVars> condition={({ vars }) => !vars.todoName}>
+  <$<AddingTodoVars>>
+    <WHILE<AddingTodoVars> condition={({ vars }) => !vars.todoName}>
       {() => <p>Please enter new todo name:</p>}
 
-      <PROMPT<AddTodoVars>
+      <PROMPT<AddingTodoVars>
         key="ask-todo"
         set={({ vars }, { event }) => ({
           ...vars,
@@ -30,27 +28,26 @@ export default build<AddTodoVars>(
       />
     </WHILE>
 
-    <EFFECT<AddTodoVars>
+    <EFFECT<AddingTodoVars>
       set={makeContainer({ deps: [TodoController] })(
         (todoController) =>
           async ({ vars, channel }) => {
-            const { todo, state } = await todoController.addTodo(
+            const { data } = await todoController.addTodo(
               channel,
               vars.todoName
             );
             return {
               ...vars,
-              id: todo.id,
-              state: state,
+              todosCount: data.todos.length,
             };
           }
       )}
     />
 
-    {async ({ vars: { todoName, state } }) => (
-      <WithRootMenu todoCount={state!.todos.length}>
+    {({ vars: { todoName, todosCount } }) => (
+      <WithMenu todoCount={todosCount}>
         Todo "<b>{todoName}</b>" is added!
-      </WithRootMenu>
+      </WithMenu>
     )}
   </$>
 );

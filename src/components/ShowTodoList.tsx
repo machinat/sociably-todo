@@ -4,7 +4,7 @@ import * as Telegram from '@machinat/telegram/components';
 import * as Line from '@machinat/line/components';
 import { Todo } from '../types';
 import TodoListTemplate from './TodoListTemplate';
-import WithRootMenu from './WithRootMenu';
+import WithMenu from './WithMenu';
 
 type ShowTodoListProps = {
   offset: number;
@@ -16,7 +16,7 @@ const ShowTodoList = (
   { platform }
 ) => {
   if (todos.length === 0) {
-    return <WithRootMenu todoCount={todos.length}>{null}</WithRootMenu>;
+    return <WithMenu todoCount={todos.length}>{null}</WithMenu>;
   }
 
   const summaryMsg =
@@ -35,7 +35,7 @@ const ShowTodoList = (
   const rangeMessage = `${offset + 1}-${end} are listed.`;
 
   const nextLabel = 'Next 10 ⏩';
-  const nextData = JSON.stringify({ action: 'list', offset: end });
+  const nextData = JSON.stringify({ type: 'list', offset: end });
 
   return (
     <>

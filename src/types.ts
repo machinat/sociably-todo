@@ -17,12 +17,12 @@ export type ChatEventContext =
 export type Todo = {
   id: number;
   name: string;
-  finishAt?: number;
 };
 
 export type TodoState = {
   currentId: number;
   todos: Todo[];
+  finishedTodos: Todo[];
 };
 
 export type WebDeleteAction = {
@@ -42,20 +42,20 @@ export type WebAppEventContext = WebviewEventContext<
 
 export type AppEventContext = ChatEventContext | WebAppEventContext;
 
-export type WebDataPush = {
-  category: 'push';
-  type: 'todo_data';
+export type WebviewDataPush = {
+  category: 'webview_push';
+  type: 'app_data';
   payload: {
-    state: TodoState;
+    data: TodoState;
   };
 };
 
-export type WebDeletedPush = {
-  category: 'push';
+export type WebviewDeletedPush = {
+  category: 'webview_push';
   type: 'todo_deleted';
   payload: {
     todo: Todo;
   };
 };
 
-export type WebAppPush = WebDataPush | WebDeletedPush;
+export type WebviewPush = WebviewDataPush | WebviewDeletedPush;

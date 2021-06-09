@@ -6,12 +6,12 @@ const handleWebview = makeContainer({ deps: [TodoController] })(
   (todoController) =>
     async ({ event, bot, metadata: { auth } }: WebAppEventContext) => {
       if (event.type === 'connect') {
-        const { state } = await todoController.getTodos(auth.channel);
+        const { data } = await todoController.getTodos(auth.channel);
 
         return bot.send(event.channel, {
-          category: 'push',
-          type: 'todo_data',
-          payload: { state },
+          category: 'webview_push',
+          type: 'app_data',
+          payload: { data },
         });
       }
 
@@ -23,7 +23,7 @@ const handleWebview = makeContainer({ deps: [TodoController] })(
 
         if (todo) {
           await bot.send(event.channel, {
-            category: 'push',
+            category: 'webview_push',
             type: 'todo_deleted',
             payload: { todo },
           });
