@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import getConfig from 'next/config';
-import WebviewClient from '@machinat/webview/client';
+import WebviewClient, { useEventReducer } from '@machinat/webview/client';
 import { MessengerClientAuthorizer } from '@machinat/messenger/webview';
 import { TelegramClientAuthorizer } from '@machinat/telegram/webview';
 import { LineClientAuthorizer } from '@machinat/line/webview';
@@ -48,8 +48,9 @@ const TodoRow = ({ todo }) => (
 );
 
 const WebAppHome = () => {
-  const [data, dispatchEvent] = React.useReducer(
-    (data: null | TodoState, event: WebviewPush): TodoState => {
+  const data = useEventReducer(
+    client,
+    (data: null | TodoState, { event }) => {
       if (event.type === 'app_data') {
         return event.payload.data;
       }
@@ -67,14 +68,6 @@ const WebAppHome = () => {
     },
     null
   );
-
-  React.useEffect(() => {
-    client.onEvent(({ event }) => {
-      dispatchEvent(event);
-    });
-
-    client.onError(console.error);
-  }, []);
 
   return (
     <div>
