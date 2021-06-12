@@ -1,6 +1,6 @@
 import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
-import { StartRuntime } from '@machinat/script';
+import Script from '@machinat/script';
 import TodoController from '../services/TodoController';
 import useProfileFactory from '../services/useProfileFactory';
 import AddingTodo from '../scenes/AddingTodo';
@@ -9,9 +9,9 @@ import WithMenu from '../components/WithMenu';
 import { ChatEventContext } from '../types';
 
 const handleMessage = makeContainer({
-  deps: [TodoController, useProfileFactory] as const,
+  deps: [Script.Processor, TodoController, useProfileFactory] as const,
 })(
-  (todoController, getProfile) =>
+  (processor, todoController, getProfile) =>
     async ({
       event,
       reply,
@@ -22,9 +22,8 @@ const handleMessage = makeContainer({
           const todoName = matchingAddTodo[2].trim();
 
           if (!todoName) {
-            return reply(
-              <StartRuntime channel={event.channel} script={AddingTodo} />
-            );
+            const runtime = await processor.start(event.channel, AddingTodo);
+            return reply(runtime.output());
           }
 
           const { data } = await todoController.addTodo(
@@ -45,15 +44,13 @@ const handleMessage = makeContainer({
       const profile = await getProfile(event.user!);
       const helloWords = <p>Hello, {profile.name}! I'm a Todo Bot 🤖</p>;
 
+      if (data.todos.length === 0) {
+        const runtime = await processor.start(event.channel, AskingFirstTodo);
+        return reply(runtime.output());
+      }
+
       return reply(
-        data.todos.length > 0 ? (
-          <WithMenu todoCount={data.todos.length}>{helloWords}</WithMenu>
-        ) : (
-          <>
-            {helloWords}
-            <StartRuntime script={AskingFirstTodo} channel={event.channel} />
-          </>
-        )
+        <WithMenu todoCount={data.todos.length}>{helloWords}</WithMenu>
       );
     }
 );

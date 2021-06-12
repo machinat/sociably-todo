@@ -1,14 +1,16 @@
 import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
-import { StartRuntime } from '@machinat/script';
+import Script from '@machinat/script';
 import TodoController from '../services/TodoController';
 import AddingTodo from '../scenes/AddingTodo';
 import WithMenu from '../components/WithMenu';
 import ShowTodoList from '../components/ShowTodoList';
 import { ChatEventContext } from '../types';
 
-const handlePostback = makeContainer({ deps: [TodoController] })(
-  (todoController) =>
+const handlePostback = makeContainer({
+  deps: [Script.Processor, TodoController] as const,
+})(
+  (processor, todoController) =>
     async ({
       event,
       reply,
@@ -18,9 +20,8 @@ const handlePostback = makeContainer({ deps: [TodoController] })(
       const action = JSON.parse(event.data!);
 
       if (action.type === 'add') {
-        return reply(
-          <StartRuntime channel={event.channel!} script={AddingTodo} />
-        );
+        const runtime = await processor.start(event.channel!, AddingTodo);
+        return reply(runtime.output());
       }
 
       if (action.type === 'list') {
