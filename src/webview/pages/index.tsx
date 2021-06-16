@@ -55,7 +55,7 @@ const WebAppHome = () => {
         return event.payload.data;
       }
 
-      if (event.type === 'todo_deleted') {
+      if (data && event.type === 'todo_deleted') {
         const { id } = event.payload.todo;
         return {
           ...data,

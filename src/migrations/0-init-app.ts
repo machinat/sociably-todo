@@ -62,14 +62,14 @@ export const down = makeContainer({
     ],
   });
 
-  // remove the page to from webhook
+  // delete app subscriptions
   await messengerBot.makeApiCall(
     'DELETE',
     `${MESSENGER_PAGE_ID}/subscribed_apps`,
     { access_token: `${MESSENGER_APP_ID}|${MESSENGER_APP_SECRET}` }
   );
 
-  // delete Messenger webhook subscription
+  // remove page from webhook subscription
   await messengerBot.makeApiCall(
     'DELETE',
     `${MESSENGER_APP_ID}/subscriptions`,

@@ -71,7 +71,7 @@ const app = Machinat.createApp({
 
   platforms: [
     Messenger.initModule({
-      entryPath: '/webhook/messenger',
+      webhookPath: '/webhook/messenger',
       pageId: Number(MESSENGER_PAGE_ID),
       appSecret: MESSENGER_APP_SECRET,
       accessToken: MESSENGER_ACCESS_TOKEN,
@@ -80,12 +80,12 @@ const app = Machinat.createApp({
 
     Telegram.initModule({
       botToken: TELEGRAM_BOT_TOKEN,
-      entryPath: '/webhook/telegram',
+      webhookPath: '/webhook/telegram',
       secretPath: TELEGRAM_SECRET_PATH,
     }),
 
     Line.initModule({
-      entryPath: '/webhook/line',
+      webhookPath: '/webhook/line',
       providerId: LINE_PROVIDER_ID,
       channelId: LINE_CHANNEL_ID,
       accessToken: LINE_ACCESS_TOKEN,
@@ -100,7 +100,6 @@ const app = Machinat.createApp({
       webviewHost: DOMAIN,
       webviewPath: '/webview',
       authSecret: WEBVIEW_AUTH_SECRET,
-
       sameSite: 'none',
       nextServerOptions: {
         dev: DEV,
