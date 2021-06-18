@@ -46,7 +46,12 @@ const handleMessage = makeContainer({
 
       if (data.todos.length === 0) {
         const runtime = await processor.start(event.channel, AskingFirstTodo);
-        return reply(runtime.output());
+        return reply(
+          <>
+            {helloWords}
+            {runtime.output()}
+          </>
+        );
       }
 
       return reply(
