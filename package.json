@@ -1,6 +1,6 @@
 {
   "name": "todo-example",
-  "version": "0.1.0-beta.5",
+  "version": "0.1.0-beta.6",
   "private": true,
   "scripts": {
     "clean": "rm -rf ./lib ./dist && rm tsconfig.tsbuildinfo",
