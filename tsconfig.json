@@ -20,7 +20,6 @@
     "skipLibCheck": true,
     "noUnusedLocals": true,
     "composite": true,
-    "declaration": true,
     "sourceMap": true,
     "types": [
       "node"
