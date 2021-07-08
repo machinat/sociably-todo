@@ -11,7 +11,7 @@ const WithMenu = ({ children, todoCount }: WithMenuProps) => {
     <>
       {children}
       <MenuTemplate>
-        You have {todoCount > 0 ? todoCount : 'no'} todos now.
+        You have {todoCount > 0 ? <b>{todoCount}</b> : 'no'} todos now.
       </MenuTemplate>
     </>
   );
