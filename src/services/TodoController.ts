@@ -47,7 +47,7 @@ export class TodoController {
     channel: MachinatChannel,
     id: number
   ): Promise<{ todo: null | Todo; data: TodoState }> {
-    let finishingTodo: undefined | Todo;
+    let finishingTodo: null | Todo = null;
 
     const data = await this.stateController
       .channelState(channel)
@@ -56,7 +56,7 @@ export class TodoController {
         (currentData = { currentId: 0, todos: [], finishedTodos: [] }) => {
           const { currentId, todos, finishedTodos } = currentData;
 
-          finishingTodo = todos.find((todo) => todo.id === id);
+          finishingTodo = todos.find((todo) => todo.id === id) || null;
           if (!finishingTodo) {
             return currentData;
           }
@@ -68,14 +68,48 @@ export class TodoController {
           };
         }
       );
-    return { todo: finishingTodo || null, data };
+    return { todo: finishingTodo, data };
+  }
+
+  async updateTodo(
+    channel: MachinatChannel,
+    id: number,
+    name: string
+  ): Promise<{ todo: null | Todo; data: TodoState }> {
+    let finishingTodo: null | Todo = null;
+
+    const data = await this.stateController
+      .channelState(channel)
+      .update<TodoState>(
+        'todo_data',
+        (currentData = { currentId: 0, todos: [], finishedTodos: [] }) => {
+          const { currentId, todos, finishedTodos } = currentData;
+
+          const updatingIdx = todos.findIndex((todo) => todo.id === id);
+          if (updatingIdx === -1) {
+            return currentData;
+          }
+
+          finishingTodo = { id, name };
+          return {
+            currentId,
+            todos: [
+              ...todos.slice(0, updatingIdx),
+              finishingTodo,
+              ...todos.slice(updatingIdx + 1),
+            ],
+            finishedTodos,
+          };
+        }
+      );
+    return { todo: finishingTodo, data };
   }
 
   async deleteTodo(
     channel: MachinatChannel,
     id: number
   ): Promise<{ todo: null | Todo; data: TodoState }> {
-    let deletingTodo: undefined | Todo;
+    let deletingTodo: null | Todo = null;
 
     const data = await this.stateController
       .channelState(channel)
@@ -85,7 +119,8 @@ export class TodoController {
           const { currentId, todos, finishedTodos } = currentData;
           deletingTodo =
             todos.find((todo) => todo.id === id) ||
-            finishedTodos.find((todo) => todo.id === id);
+            finishedTodos.find((todo) => todo.id === id) ||
+            null;
 
           if (!deletingTodo) {
             return currentData;
@@ -98,7 +133,7 @@ export class TodoController {
           };
         }
       );
-    return { todo: deletingTodo || null, data };
+    return { todo: deletingTodo, data };
   }
 }
 

@@ -22,13 +22,29 @@ const handleWebview = makeContainer({ deps: [TodoController] })(
         );
 
         if (todo) {
-          await bot.send(event.channel, {
+          return bot.send(event.channel, {
             category: 'webview_push',
             type: 'todo_deleted',
             payload: { todo },
           });
         }
-        return;
+      }
+
+      if (event.type === 'update_todo') {
+        const { id, name } = event.payload;
+        const { todo } = await todoController.updateTodo(
+          auth.channel,
+          id,
+          name
+        );
+
+        if (todo) {
+          return bot.send(event.channel, {
+            category: 'webview_push',
+            type: 'todo_updated',
+            payload: { todo },
+          });
+        }
       }
     }
 );

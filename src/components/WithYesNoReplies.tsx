@@ -51,16 +51,12 @@ const WithYesNoReplies = (
       <Line.Expression
         quickReplies={
           <>
-            <Line.QuickReply
-              action={
-                <Line.PostbackAction displayText={yesWords} data={yesData} />
-              }
-            />
-            <Line.QuickReply
-              action={
-                <Line.PostbackAction displayText={noWords} data={noData} />
-              }
-            />
+            <Line.QuickReply>
+              <Line.PostbackAction displayText={yesWords} data={yesData} />
+            </Line.QuickReply>
+            <Line.QuickReply>
+              <Line.PostbackAction displayText={noWords} data={noData} />
+            </Line.QuickReply>
           </>
         }
       >

@@ -33,7 +33,19 @@ export type WebDeleteAction = {
   };
 };
 
-export type WebAppEventValue = ConnectionEventValue | WebDeleteAction;
+export type WebUpdateAction = {
+  category: 'action';
+  type: 'update_todo';
+  payload: {
+    id: number;
+    name: string;
+  };
+};
+
+export type WebAppEventValue =
+  | ConnectionEventValue
+  | WebDeleteAction
+  | WebUpdateAction;
 
 export type WebAppEventContext = WebviewEventContext<
   MessengerServerAuthorizer | TelegramServerAuthorizer | LineServerAuthorizer,
@@ -58,4 +70,16 @@ export type WebviewDeletedPush = {
   };
 };
 
-export type WebviewPush = WebviewDataPush | WebviewDeletedPush;
+export type WebviewUpdatedPush = {
+  category: 'webview_push';
+  type: 'todo_updated';
+  payload: {
+    todo: Todo;
+    name: string;
+  };
+};
+
+export type WebviewPush =
+  | WebviewDataPush
+  | WebviewDeletedPush
+  | WebviewUpdatedPush;
