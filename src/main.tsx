@@ -5,7 +5,7 @@ import Script from '@machinat/script';
 import handleMessage from './handlers/handleMessage';
 import handlePostback from './handlers/handlePostback';
 import handleWebview from './handlers/handleWebview';
-import type { AppEventContext, ChatEventContext } from '../types';
+import type { AppEventContext, ChatEventContext } from './types';
 
 const main = (event$: Stream<AppEventContext>) => {
   const chat$ = event$.pipe(

@@ -5,7 +5,7 @@ import WebviewClient, { useEventReducer } from '@machinat/webview/client';
 import { MessengerClientAuthorizer } from '@machinat/messenger/webview';
 import { TelegramClientAuthorizer } from '@machinat/telegram/webview';
 import { LineClientAuthorizer } from '@machinat/line/webview';
-import { Todo, TodoState, WebviewPush } from '../../types';
+import { Todo, TodoState, WebviewPush } from '../../src/types';
 
 const { publicRuntimeConfig } = getConfig();
 

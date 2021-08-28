@@ -16,7 +16,7 @@ import { ServerDomain, LineLiffId } from './interface';
 import TodoController from './services/TodoController';
 import useProfilerFactory from './services/useProfileFactory';
 import nextConfigs from '../webview/next.config.js';
-import { WebAppEventValue } from '../types';
+import { WebAppEventValue } from './types';
 
 const {
   // location

@@ -1,7 +1,7 @@
 import { MachinatChannel } from '@machinat/core';
 import { makeClassProvider } from '@machinat/core/service';
 import StateController from '@machinat/core/base/StateController';
-import { TodoState, Todo } from '../../types';
+import { TodoState, Todo } from '../types';
 
 export class TodoController {
   stateController: StateController;
