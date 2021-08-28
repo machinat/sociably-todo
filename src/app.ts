@@ -15,8 +15,8 @@ import AskingFirstTodo from './scenes/AskingFirstTodo';
 import { ServerDomain, LineLiffId } from './interface';
 import TodoController from './services/TodoController';
 import useProfilerFactory from './services/useProfileFactory';
-import nextConfigs from './webview/next.config.js';
-import { WebAppEventValue } from './types';
+import nextConfigs from '../webview/next.config.js';
+import { WebAppEventValue } from '../types';
 
 const {
   // location
@@ -103,7 +103,7 @@ const app = Machinat.createApp({
       sameSite: 'none',
       nextServerOptions: {
         dev: DEV,
-        dir: `./${DEV ? 'src' : 'lib'}/webview`,
+        dir: './webview',
         conf: {
           ...nextConfigs,
           publicRuntimeConfig: {

@@ -2,7 +2,7 @@ import Machinat from '@machinat/core';
 import * as Messenger from '@machinat/messenger/components';
 import * as Telegram from '@machinat/telegram/components';
 import * as Line from '@machinat/line/components';
-import { Todo } from '../types';
+import { Todo } from '../../types';
 import TodoListTemplate from './TodoListTemplate';
 import WithMenu from './WithMenu';
 

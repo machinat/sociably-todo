@@ -6,7 +6,7 @@ import useProfileFactory from '../services/useProfileFactory';
 import AddingTodo from '../scenes/AddingTodo';
 import AskingFirstTodo from '../scenes/AskingFirstTodo';
 import WithMenu from '../components/WithMenu';
-import { ChatEventContext } from '../types';
+import { ChatEventContext } from '../../types';
 
 const handleMessage = makeContainer({
   deps: [Script.Processor, TodoController, useProfileFactory] as const,

@@ -1,6 +1,6 @@
 import { makeContainer } from '@machinat/core/service';
 import TodoController from '../services/TodoController';
-import type { WebAppEventContext } from '../types';
+import type { WebAppEventContext } from '../../types';
 
 const handleWebview = makeContainer({ deps: [TodoController] })(
   (todoController) =>

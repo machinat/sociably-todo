@@ -5,7 +5,7 @@ import TodoController from '../services/TodoController';
 import AddingTodo from '../scenes/AddingTodo';
 import WithMenu from '../components/WithMenu';
 import ShowTodoList from '../components/ShowTodoList';
-import { ChatEventContext } from '../types';
+import { ChatEventContext } from '../../types';
 
 const handlePostback = makeContainer({
   deps: [Script.Processor, TodoController] as const,

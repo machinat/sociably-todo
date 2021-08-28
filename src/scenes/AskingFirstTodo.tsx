@@ -3,7 +3,7 @@ import { build } from '@machinat/script';
 import { IF, THEN, PROMPT, RETURN, CALL } from '@machinat/script/keywords';
 import WithYesNoReplies from '../components/WithYesNoReplies';
 import AddingTodo from './AddingTodo';
-import { ChatEventContext } from '../types';
+import { ChatEventContext } from '../../types';
 
 type AskingFirstTodoVars = {
   ok: boolean;
