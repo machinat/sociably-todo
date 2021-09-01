@@ -27,7 +27,8 @@ const main = (event$: Stream<AppEventContext>) => {
 
   chat$
     .pipe(filter((ctx) => ctx.event.category === 'message'))
-    .subscribe(handleMessage);
+    .subscribe(handleMessage)
+    .catch(console.error);
 
   chat$
     .pipe(
@@ -36,11 +37,13 @@ const main = (event$: Stream<AppEventContext>) => {
           ctx.event.type === 'postback' || ctx.event.type === 'callback_query'
       )
     )
-    .subscribe(handlePostback);
+    .subscribe(handlePostback)
+    .catch(console.error);
 
   event$
     .pipe(filter((ctx) => ctx.event.platform === 'webview'))
-    .subscribe(handleWebview);
+    .subscribe(handleWebview)
+    .catch(console.error);
 };
 
 export default main;

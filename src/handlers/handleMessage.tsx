@@ -42,7 +42,9 @@ const handleMessage = makeContainer({
 
       const { data } = await todoController.getTodos(event.channel);
       const profile = await getProfile(event.user!);
-      const helloWords = <p>Hello, {profile.name}! I'm a Todo Bot 🤖</p>;
+      const helloWords = (
+        <p>Hello{profile ? `, ${profile.name}` : ''}! I'm a Todo Bot 🤖</p>
+      );
 
       if (data.todos.length === 0) {
         const runtime = await processor.start(event.channel, AskingFirstTodo);
