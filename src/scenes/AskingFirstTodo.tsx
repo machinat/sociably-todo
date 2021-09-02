@@ -37,7 +37,7 @@ export default build<AskingFirstTodoVars>(
 
     <IF<AskingFirstTodoVars> condition={({ vars: { ok } }) => !ok}>
       <THEN>
-        {() => <p>Ok, tell me when you need!</p>}
+        {() => <p>OK, tell me when you need!</p>}
         <RETURN />
       </THEN>
     </IF>

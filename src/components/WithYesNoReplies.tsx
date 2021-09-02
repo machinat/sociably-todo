@@ -11,7 +11,7 @@ const WithYesNoReplies = (
   { children }: WithYesNoRepliesProps,
   { platform }
 ) => {
-  const yesWords = 'Ok';
+  const yesWords = 'OK';
   const yesData = JSON.stringify({ action: 'yes' });
   const noWords = 'Maybe later';
   const noData = JSON.stringify({ action: 'no' });
