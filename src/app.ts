@@ -27,7 +27,6 @@ const {
   WEBVIEW_AUTH_SECRET,
   // messenger
   MESSENGER_PAGE_ID,
-  MESSENGER_APP_ID,
   MESSENGER_ACCESS_TOKEN,
   MESSENGER_APP_SECRET,
   MESSENGER_VERIFY_TOKEN,
@@ -104,15 +103,7 @@ const app = Machinat.createApp({
       nextServerOptions: {
         dev: DEV,
         dir: './webview',
-        conf: {
-          ...nextConfigs,
-          publicRuntimeConfig: {
-            messengerAppId: MESSENGER_APP_ID,
-            lineProviderId: LINE_PROVIDER_ID,
-            lineBotChannelId: LINE_CHANNEL_ID,
-            lineLiffId: LINE_LIFF_ID,
-          },
-        },
+        conf: nextConfigs,
       },
     }),
   ],

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { config as configEnv } from 'dotenv';
 import { resolve as resolvePath } from 'path';
 import Machinat from '@machinat/core';
 import Messenger from '@machinat/messenger';
@@ -8,7 +7,6 @@ import Line from '@machinat/line';
 import { Umzug, JSONStorage } from 'umzug';
 import commander from 'commander';
 
-configEnv();
 const {
   MESSENGER_PAGE_ID,
   MESSENGER_ACCESS_TOKEN,
