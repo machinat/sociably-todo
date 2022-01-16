@@ -1,7 +1,7 @@
 import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
 import { build } from '@machinat/script';
-import { $, WHILE, PROMPT, EFFECT } from '@machinat/script/keywords';
+import * as $ from '@machinat/script/keywords';
 import WithMenu from '../components/WithMenu';
 import TodoController from '../services/TodoController';
 
@@ -15,20 +15,20 @@ export default build<AddingTodoVars>(
     name: 'AddingTodo',
     initVars: () => ({ todoName: '', todosCount: 0 }),
   },
-  <$<AddingTodoVars>>
-    <WHILE<AddingTodoVars> condition={({ vars }) => !vars.todoName}>
+  <$.BLOCK<AddingTodoVars>>
+    <$.WHILE<AddingTodoVars> condition={({ vars }) => !vars.todoName}>
       {() => <p>Please enter new todo name:</p>}
 
-      <PROMPT<AddingTodoVars>
+      <$.PROMPT<AddingTodoVars>
         key="ask-todo"
         set={({ vars }, { event }) => ({
           ...vars,
           todoName: event.type === 'text' ? event.text : '',
         })}
       />
-    </WHILE>
+    </$.WHILE>
 
-    <EFFECT<AddingTodoVars>
+    <$.EFFECT<AddingTodoVars>
       set={makeContainer({ deps: [TodoController] })(
         (todoController) =>
           async ({ vars, channel }) => {
@@ -49,5 +49,5 @@ export default build<AddingTodoVars>(
         Todo "<b>{todoName}</b>" is added!
       </WithMenu>
     )}
-  </$>
+  </$.BLOCK>
 );

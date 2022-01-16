@@ -8,7 +8,7 @@ import Telegram from '@machinat/telegram';
 import TelegramAuthorizer from '@machinat/telegram/webview';
 import Webview from '@machinat/webview';
 import RedisState from '@machinat/redis-state';
-import { FileState } from '@machinat/local-state';
+import { FileState } from '@machinat/dev-state';
 import Script from '@machinat/script';
 import AddingTodo from './scenes/AddingTodo';
 import AskingFirstTodo from './scenes/AskingFirstTodo';
@@ -118,9 +118,9 @@ const app = Machinat.createApp({
   ],
 
   services: [
-    { provide: Webview.AuthorizerList, withProvider: MessengerAuthorizer },
-    { provide: Webview.AuthorizerList, withProvider: TelegramAuthorizer },
-    { provide: Webview.AuthorizerList, withProvider: LineAuthorizer },
+    { provide: Webview.AuthenticatorList, withProvider: MessengerAuthorizer },
+    { provide: Webview.AuthenticatorList, withProvider: TelegramAuthorizer },
+    { provide: Webview.AuthenticatorList, withProvider: LineAuthorizer },
 
     TodoController,
     useProfilerFactory,

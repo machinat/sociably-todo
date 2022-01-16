@@ -1,6 +1,6 @@
 import Machinat from '@machinat/core';
 import { build } from '@machinat/script';
-import { IF, THEN, PROMPT, RETURN, CALL } from '@machinat/script/keywords';
+import * as $ from '@machinat/script/keywords';
 import WithYesNoReplies from '../components/WithYesNoReplies';
 import AddingTodo from './AddingTodo';
 import { ChatEventContext } from '../types';
@@ -21,7 +21,7 @@ export default build<AskingFirstTodoVars>(
       </WithYesNoReplies>
     )}
 
-    <PROMPT<AskingFirstTodoVars, ChatEventContext>
+    <$.PROMPT<AskingFirstTodoVars, ChatEventContext>
       key="ask-adding"
       set={(_, { event }) => ({
         ok:
@@ -35,13 +35,13 @@ export default build<AskingFirstTodoVars>(
       })}
     />
 
-    <IF<AskingFirstTodoVars> condition={({ vars: { ok } }) => !ok}>
-      <THEN>
+    <$.IF<AskingFirstTodoVars> condition={({ vars: { ok } }) => !ok}>
+      <$.THEN>
         {() => <p>Ok, tell me when you need!</p>}
-        <RETURN />
-      </THEN>
-    </IF>
+        <$.RETURN />
+      </$.THEN>
+    </$.IF>
 
-    <CALL key="adding-todo" script={AddingTodo} />
+    <$.CALL key="adding-todo" script={AddingTodo} />
   </>
 );

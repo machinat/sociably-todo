@@ -2,31 +2,28 @@ import React from 'react';
 import Head from 'next/head';
 import getConfig from 'next/config';
 import WebviewClient, { useEventReducer } from '@machinat/webview/client';
-import { MessengerClientAuthorizer } from '@machinat/messenger/webview';
-import { TelegramClientAuthorizer } from '@machinat/telegram/webview';
-import { LineClientAuthorizer } from '@machinat/line/webview';
+import { MessengerClientAuthenticator } from '@machinat/messenger/webview';
+import { TelegramClientAuthenticator } from '@machinat/telegram/webview';
+import { LineClientAuthenticator } from '@machinat/line/webview';
 import { Todo, TodoState, WebviewPush } from '../../src/types';
 
 const { publicRuntimeConfig } = getConfig();
 
 const client = new WebviewClient<
-  MessengerClientAuthorizer | TelegramClientAuthorizer | LineClientAuthorizer,
+  MessengerClientAuthenticator | TelegramClientAuthenticator | LineClientAuthenticator,
   WebviewPush
->(
-  typeof window === 'undefined'
-    ? { mockupMode: true, authorizers: [] }
-    : {
-        authorizers: [
-          new MessengerClientAuthorizer({
-            appId: publicRuntimeConfig.messengerAppId,
-          }),
-          new TelegramClientAuthorizer(),
-          new LineClientAuthorizer({
-            liffId: publicRuntimeConfig.lineLiffId,
-          }),
-        ],
-      }
-);
+>({
+  mockupMode:   typeof window === 'undefined',
+  authenticators: [
+    new MessengerClientAuthenticator({
+      appId: publicRuntimeConfig.messengerAppId,
+    }),
+    new TelegramClientAuthenticator(),
+    new LineClientAuthenticator({
+      liffId: publicRuntimeConfig.lineLiffId,
+    }),
+  ],
+});
 
 const TodoRow = ({ todo, finished }: { todo: Todo; finished?: boolean }) => (
   <tr key={todo.id}>
