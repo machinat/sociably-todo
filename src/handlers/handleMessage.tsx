@@ -1,42 +1,45 @@
 import Machinat from '@machinat/core';
 import { makeContainer } from '@machinat/core/service';
+import IntentRecognizer from '@machinat/core/base/IntentRecognizer';
 import Script from '@machinat/script';
 import TodoController from '../services/TodoController';
-import useProfileFactory from '../services/useProfileFactory';
+import useUserProfile from '../services/useUserProfile';
 import AddingTodo from '../scenes/AddingTodo';
 import AskingFirstTodo from '../scenes/AskingFirstTodo';
+import ShowTodos from '../components/ShowTodos';
+import EditCard from '../components/EditCard';
 import WithMenu from '../components/WithMenu';
+import recognitionData from '../recognitionData';
 import { ChatEventContext } from '../types';
 
 const handleMessage = makeContainer({
-  deps: [Script.Processor, TodoController, useProfileFactory] as const,
+  deps: [Script.Processor, IntentRecognizer, TodoController, useUserProfile],
 })(
-  (processor, todoController, getProfile) =>
-    async ({
-      event,
-      reply,
-    }: ChatEventContext & { event: { category: 'message' } }) => {
+  (
+      processor,
+      intentRecognizer: IntentRecognizer<typeof recognitionData>,
+      todoController,
+      getProfile
+    ) =>
+    async (ctx: ChatEventContext & { event: { category: 'message' } }) => {
+      const { event, reply } = ctx;
+
       if (event.type === 'text') {
-        const matchingAddTodo = event.text.match(/add(\s+todo)?(.*)/i);
-        if (matchingAddTodo) {
-          const todoName = matchingAddTodo[2].trim();
+        const intent = await intentRecognizer.detectText(
+          event.channel,
+          event.text
+        );
 
-          if (!todoName) {
-            const runtime = await processor.start(event.channel, AddingTodo);
-            return reply(runtime.output());
-          }
-
-          const { data } = await todoController.addTodo(
-            event.channel,
-            todoName
-          );
-          return reply(
-            <WithMenu todoCount={data.todos.length}>
-              <p>
-                Todo "<b>{todoName}</b>" is added!
-              </p>
-            </WithMenu>
-          );
+        if (intent.type === 'addTodo') {
+          const runtime = await processor.start(event.channel, AddingTodo);
+          return reply(runtime.output());
+        }
+        if (intent.type === 'editTodos') {
+          return reply(<EditCard />);
+        }
+        if (intent.type === 'listTodos') {
+          const { data } = await todoController.getTodos(event.channel);
+          return reply(<ShowTodos todos={data.todos} offset={0} />);
         }
       }
 

@@ -60,6 +60,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
             actions={
               <Line.PostbackAction
                 label={finishLabel}
+                displayText={`Finish ${todo.name}`}
                 data={JSON.stringify({ type: 'finish', id: todo.id })}
               />
             }

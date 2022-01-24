@@ -2,19 +2,21 @@ import React from 'react';
 import Head from 'next/head';
 import getConfig from 'next/config';
 import WebviewClient, { useEventReducer } from '@machinat/webview/client';
-import { MessengerClientAuthenticator } from '@machinat/messenger/webview';
-import { TelegramClientAuthenticator } from '@machinat/telegram/webview';
-import { LineClientAuthenticator } from '@machinat/line/webview';
+import MessengerClientAuthenticator from '@machinat/messenger/webview/client';
+import TelegramClientAuthenticator from '@machinat/telegram/webview/client';
+import LineClientAuthenticator from '@machinat/line/webview/client';
 import { Todo, TodoState, WebviewPush } from '../../src/types';
 
 const { publicRuntimeConfig } = getConfig();
 
 const client = new WebviewClient<
-  MessengerClientAuthenticator | TelegramClientAuthenticator | LineClientAuthenticator,
+  | MessengerClientAuthenticator
+  | TelegramClientAuthenticator
+  | LineClientAuthenticator,
   WebviewPush
 >({
-  mockupMode:   typeof window === 'undefined',
-  authenticators: [
+  mockupMode: typeof window === 'undefined',
+  authPlatforms: [
     new MessengerClientAuthenticator({
       appId: publicRuntimeConfig.messengerAppId,
     }),

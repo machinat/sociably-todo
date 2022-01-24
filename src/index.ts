@@ -1,7 +1,9 @@
 import { fromApp } from '@machinat/stream';
 import main from './main';
-import app from './app';
+import createApp from './app';
 
+const app = createApp();
+app.onError(console.error);
 app
   .start()
   .then(() => {

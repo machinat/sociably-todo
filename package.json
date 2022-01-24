@@ -3,9 +3,9 @@
   "private": true,
   "license" : "MIT",
   "scripts": {
-    "build": "npm run clean && npm run build:source && npm run build:next",
-    "build:source": "tsc",
-    "build:next": "dotenv -- next build ./webview",
+    "build": "npm run clean && npm run build:src && npm run build:webview",
+    "build:src": "tsc",
+    "build:webview": "dotenv -- next build ./webview",
     "clean": "rm -rf ./lib ./dist",
     "dev": "dotenv -- ts-node ./src/cli/dev.ts",
     "migrate": "per-env",
@@ -16,30 +16,31 @@
     "start:production": "node ./lib/index.js"
   },
   "dependencies": {
-    "@machinat/core": "^0.5.0-beta.29",
-    "@machinat/dev-state": "^0.5.0-beta.30",
-    "@machinat/http": "^0.5.0-beta.14",
-    "@machinat/line": "^0.5.0-beta.29",
-    "@machinat/messenger": "^0.5.0-beta.30",
+    "@machinat/core": "^0.5.0-beta.37",
+    "@machinat/dev-tools": "^0.5.0-beta.37",
+    "@machinat/dialogflow": "^0.5.0-beta.37",
+    "@machinat/http": "^0.5.0-beta.40",
+    "@machinat/line": "^0.5.0-beta.40",
+    "@machinat/messenger": "^0.5.0-beta.40",
     "@machinat/per-env": "^1.1.0",
-    "@machinat/redis-state": "^0.5.0-beta.30",
-    "@machinat/script": "^0.5.0-beta.30",
-    "@machinat/stream": "^0.5.0-beta.14",
-    "@machinat/telegram": "^0.5.0-beta.29",
-    "@machinat/webview": "^0.5.0-beta.28",
+    "@machinat/redis-state": "^0.5.0-beta.36",
+    "@machinat/script": "^0.5.0-beta.37",
+    "@machinat/stream": "^0.5.0-beta.36",
+    "@machinat/telegram": "^0.5.0-beta.40",
+    "@machinat/webview": "^0.5.0-beta.40",
     "commander": "^7.2.0",
-    "next": "^11.0.1",
+    "next": "^12.0.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "umzug": "^3.0.0-beta.15"
+    "umzug": "^3.0.0"
   },
   "devDependencies": {
-    "@types/node": "^14.14.41",
-    "@types/react": "^17.0.2",
+    "@types/node": "^17.0.10",
+    "@types/react": "^17.0.38",
     "dotenv-cli": "^4.1.1",
     "localtunnel": "^2.0.1",
     "nodemon": "^2.0.7",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.2.4"
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
   }
 }

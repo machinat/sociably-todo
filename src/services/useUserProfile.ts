@@ -5,8 +5,8 @@ import StateController from '@machinat/core/base/StateController';
 
 const PROFILE_STATE_KEY = 'user_profile_cache';
 
-const useProfileFactory = makeFactoryProvider({
-  deps: [Profiler, StateController] as const,
+const useUserProfile = makeFactoryProvider({
+  deps: [Profiler, StateController],
 })(
   (profiler, stateController) =>
     async (user: MachinatUser): Promise<null | MachinatProfile> => {
@@ -32,4 +32,4 @@ const useProfileFactory = makeFactoryProvider({
     }
 );
 
-export default useProfileFactory;
+export default useUserProfile;

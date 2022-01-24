@@ -1,21 +1,23 @@
 import Machinat from '@machinat/core';
 import Http from '@machinat/http';
 import Messenger from '@machinat/messenger';
-import MessengerAuthorizer from '@machinat/messenger/webview';
+import MessengerWebviewAuth from '@machinat/messenger/webview';
 import Line from '@machinat/line';
-import LineAuthorizer from '@machinat/line/webview';
+import LineAuthenticator from '@machinat/line/webview';
 import Telegram from '@machinat/telegram';
-import TelegramAuthorizer from '@machinat/telegram/webview';
+import TelegramAuthenticator from '@machinat/telegram/webview';
 import Webview from '@machinat/webview';
+import DialogFlow from '@machinat/dialogflow';
 import RedisState from '@machinat/redis-state';
-import { FileState } from '@machinat/dev-state';
+import { FileState } from '@machinat/dev-tools';
 import Script from '@machinat/script';
 import AddingTodo from './scenes/AddingTodo';
 import AskingFirstTodo from './scenes/AskingFirstTodo';
+import nextConfigs from '../webview/next.config.js';
 import { ServerDomain, LineLiffId } from './interface';
 import TodoController from './services/TodoController';
-import useProfilerFactory from './services/useProfileFactory';
-import nextConfigs from '../webview/next.config.js';
+import useUserProfile from './services/useUserProfile';
+import recognitionData from './recognitionData';
 import { WebAppEventValue } from './types';
 
 const {
@@ -41,83 +43,113 @@ const {
   LINE_LIFF_ID,
   // redis
   REDIS_URL,
+  // dialogflow
+  DIALOG_FLOW_PROJECT_ID,
+  DIALOG_FLOW_CLIENT_EMAIL,
+  DIALOG_FLOW_PRIVATE_KEY,
+  GOOGLE_APPLICATION_CREDENTIALS,
 } = process.env as Record<string, string>;
 
-const DEV = NODE_ENV === 'development';
+const DEV = NODE_ENV !== 'production';
 
-const app = Machinat.createApp({
-  modules: [
-    Http.initModule({
-      listenOptions: {
-        port: PORT ? Number(PORT) : 8080,
-      },
-    }),
+type CreateAppOptions = {
+  noServer?: boolean;
+};
 
-    DEV
-      ? FileState.initModule({
-          path: './.state_data.json',
-        })
-      : RedisState.initModule({
-          clientOptions: {
-            url: REDIS_URL,
-          },
-        }),
+const createApp = (options?: CreateAppOptions) => {
+  return Machinat.createApp({
+    modules: [
+      Http.initModule({
+        noServer: options?.noServer,
+        listenOptions: {
+          port: PORT ? Number(PORT) : 8080,
+        },
+      }),
 
-    Script.initModule({
-      libs: [AddingTodo, AskingFirstTodo],
-    }),
-  ],
+      DEV
+        ? FileState.initModule({
+            path: './.state_data.json',
+          })
+        : RedisState.initModule({
+            clientOptions: {
+              url: REDIS_URL,
+            },
+          }),
 
-  platforms: [
-    Messenger.initModule({
-      webhookPath: '/webhook/messenger',
-      pageId: Number(MESSENGER_PAGE_ID),
-      appSecret: MESSENGER_APP_SECRET,
-      accessToken: MESSENGER_ACCESS_TOKEN,
-      verifyToken: MESSENGER_VERIFY_TOKEN,
-    }),
+      Script.initModule({
+        libs: [AddingTodo, AskingFirstTodo],
+      }),
 
-    Telegram.initModule({
-      botToken: TELEGRAM_BOT_TOKEN,
-      webhookPath: '/webhook/telegram',
-      secretPath: TELEGRAM_SECRET_PATH,
-    }),
+      DialogFlow.initModule({
+        recognitionData,
+        projectId: DIALOG_FLOW_PROJECT_ID,
+        environment: `todo-example-${DEV ? 'dev' : 'prod'}`,
+        clientOptions: GOOGLE_APPLICATION_CREDENTIALS
+          ? undefined
+          : {
+              credentials: {
+                client_email: DIALOG_FLOW_CLIENT_EMAIL,
+                private_key: DIALOG_FLOW_PRIVATE_KEY,
+              },
+            },
+      }),
+    ],
 
-    Line.initModule({
-      webhookPath: '/webhook/line',
-      providerId: LINE_PROVIDER_ID,
-      channelId: LINE_CHANNEL_ID,
-      accessToken: LINE_ACCESS_TOKEN,
-      channelSecret: LINE_CHANNEL_SECRET,
-      liffChannelIds: [LINE_LIFF_ID.split('-')[0]],
-    }),
+    platforms: [
+      Messenger.initModule({
+        webhookPath: '/webhook/messenger',
+        pageId: Number(MESSENGER_PAGE_ID),
+        appSecret: MESSENGER_APP_SECRET,
+        accessToken: MESSENGER_ACCESS_TOKEN,
+        verifyToken: MESSENGER_VERIFY_TOKEN,
+      }),
 
-    Webview.initModule<
-      MessengerAuthorizer | TelegramAuthorizer | LineAuthorizer,
-      WebAppEventValue
-    >({
-      webviewHost: DOMAIN,
-      webviewPath: '/webview',
-      authSecret: WEBVIEW_AUTH_SECRET,
-      sameSite: 'none',
-      nextServerOptions: {
-        dev: DEV,
-        dir: './webview',
-        conf: nextConfigs,
-      },
-    }),
-  ],
+      Telegram.initModule({
+        webhookPath: '/webhook/telegram',
+        botToken: TELEGRAM_BOT_TOKEN,
+        secretPath: TELEGRAM_SECRET_PATH,
+      }),
 
-  services: [
-    { provide: Webview.AuthenticatorList, withProvider: MessengerAuthorizer },
-    { provide: Webview.AuthenticatorList, withProvider: TelegramAuthorizer },
-    { provide: Webview.AuthenticatorList, withProvider: LineAuthorizer },
+      Line.initModule({
+        webhookPath: '/webhook/line',
+        providerId: LINE_PROVIDER_ID,
+        channelId: LINE_CHANNEL_ID,
+        accessToken: LINE_ACCESS_TOKEN,
+        channelSecret: LINE_CHANNEL_SECRET,
+        liffChannelIds: [LINE_LIFF_ID.split('-')[0]],
+      }),
 
-    TodoController,
-    useProfilerFactory,
-    { provide: ServerDomain, withValue: DOMAIN },
-    { provide: LineLiffId, withValue: LINE_LIFF_ID },
-  ],
-});
+      Webview.initModule<
+        MessengerWebviewAuth | TelegramAuthenticator | LineAuthenticator,
+        WebAppEventValue
+      >({
+        webviewHost: DOMAIN,
+        webviewPath: '/webview',
 
-export default app;
+        authSecret: WEBVIEW_AUTH_SECRET,
+        sameSite: 'none',
+        authPlatforms: [
+          MessengerWebviewAuth,
+          TelegramAuthenticator,
+          LineAuthenticator,
+        ],
+
+        noNextServer: options?.noServer,
+        nextServerOptions: {
+          dev: DEV,
+          dir: './webview',
+          conf: nextConfigs,
+        },
+      }),
+    ],
+
+    services: [
+      TodoController,
+      useUserProfile,
+      { provide: ServerDomain, withValue: DOMAIN },
+      { provide: LineLiffId, withValue: LINE_LIFF_ID },
+    ],
+  });
+};
+
+export default createApp;

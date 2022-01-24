@@ -4,11 +4,11 @@ import Script from '@machinat/script';
 import TodoController from '../services/TodoController';
 import AddingTodo from '../scenes/AddingTodo';
 import WithMenu from '../components/WithMenu';
-import ShowTodoList from '../components/ShowTodoList';
+import ShowTodos from '../components/ShowTodos';
 import { ChatEventContext } from '../types';
 
 const handlePostback = makeContainer({
-  deps: [Script.Processor, TodoController] as const,
+  deps: [Script.Processor, TodoController],
 })(
   (processor, todoController) =>
     async ({
@@ -27,7 +27,7 @@ const handlePostback = makeContainer({
       if (action.type === 'list') {
         const { data } = await todoController.getTodos(event.channel!);
         return reply(
-          <ShowTodoList todos={data.todos} offset={action.offset || 0} />
+          <ShowTodos todos={data.todos} offset={action.offset || 0} />
         );
       }
 

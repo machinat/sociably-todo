@@ -3,7 +3,7 @@ import * as Messenger from '@machinat/messenger/components';
 import * as Telegram from '@machinat/telegram/components';
 import * as Line from '@machinat/line/components';
 import { Todo } from '../types';
-import TodoListTemplate from './TodoListTemplate';
+import TodoList from './TodoList';
 import WithMenu from './WithMenu';
 
 type ShowTodoListProps = {
@@ -26,7 +26,7 @@ const ShowTodoList = (
     return (
       <>
         {summaryMsg}
-        <TodoListTemplate todos={todos} />
+        <TodoList todos={todos} />
       </>
     );
   }
@@ -40,7 +40,7 @@ const ShowTodoList = (
   return (
     <>
       {summaryMsg}
-      <TodoListTemplate todos={todos.slice(offset, end)} />
+      <TodoList todos={todos.slice(offset, end)} />
 
       {end >= todos.length ? (
         <p>{rangeMessage}</p>
@@ -65,7 +65,13 @@ const ShowTodoList = (
       ) : platform === 'line' ? (
         <Line.ButtonTemplate
           altText={(template) => template.text}
-          actions={<Line.PostbackAction label={nextLabel} data={nextData} />}
+          actions={
+            <Line.PostbackAction
+              label={nextLabel}
+              displayText={nextLabel}
+              data={nextData}
+            />
+          }
         >
           {rangeMessage}
         </Line.ButtonTemplate>

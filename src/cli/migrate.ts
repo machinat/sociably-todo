@@ -1,42 +1,11 @@
 #!/usr/bin/env node
 import { resolve as resolvePath } from 'path';
-import Machinat from '@machinat/core';
-import Messenger from '@machinat/messenger';
-import Telegram from '@machinat/telegram';
-import Line from '@machinat/line';
+import DialogFlow from '@machinat/dialogflow';
 import { Umzug, JSONStorage } from 'umzug';
 import commander from 'commander';
+import createApp from '../app';
 
-const {
-  MESSENGER_PAGE_ID,
-  MESSENGER_ACCESS_TOKEN,
-  TELEGRAM_BOT_TOKEN,
-  LINE_PROVIDER_ID,
-  LINE_CHANNEL_ID,
-  LINE_ACCESS_TOKEN,
-} = process.env as Record<string, string>;
-
-const app = Machinat.createApp({
-  platforms: [
-    Messenger.initModule({
-      pageId: Number(MESSENGER_PAGE_ID),
-      accessToken: MESSENGER_ACCESS_TOKEN,
-      noServer: true,
-    }),
-
-    Telegram.initModule({
-      botToken: TELEGRAM_BOT_TOKEN,
-      noServer: true,
-    }),
-
-    Line.initModule({
-      providerId: LINE_PROVIDER_ID,
-      channelId: LINE_CHANNEL_ID,
-      accessToken: LINE_ACCESS_TOKEN,
-      noServer: true,
-    }),
-  ],
-});
+const app = createApp();
 
 const umzug = new Umzug({
   storage: new JSONStorage({
@@ -86,6 +55,16 @@ async function migrate() {
   } else {
     await umzug.up();
   }
+
+  const [dialogFlowRecognizer] = app.useServices([DialogFlow.Recognizer]);
+  console.log('[dialogflow:train] start updating dialogflow');
+
+  const isUpdated = await dialogFlowRecognizer.train();
+  console.log(
+    `[dialogflow:train] ${
+      isUpdated ? 'new agent version is created' : 'agent version is up to date'
+    }`
+  );
 
   await app.stop();
 }
