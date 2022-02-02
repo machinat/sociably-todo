@@ -1,12 +1,15 @@
-import { MachinatUser } from '@machinat/core';
-import { makeFactoryProvider } from '@machinat/core/service';
-import Profiler, { MachinatProfile } from '@machinat/core/base/Profiler';
-import StateController from '@machinat/core/base/StateController';
+import {
+  makeFactoryProvider,
+  BasicProfiler,
+  MachinatUser,
+  MachinatProfile,
+  StateController,
+} from '@machinat/core';
 
 const PROFILE_STATE_KEY = 'user_profile_cache';
 
 const useUserProfile = makeFactoryProvider({
-  deps: [Profiler, StateController],
+  deps: [BasicProfiler, StateController],
 })(
   (profiler, stateController) =>
     async (user: MachinatUser): Promise<null | MachinatProfile> => {

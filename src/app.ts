@@ -16,6 +16,7 @@ import AskingFirstTodo from './scenes/AskingFirstTodo';
 import nextConfigs from '../webview/next.config.js';
 import { ServerDomain, LineLiffId } from './interface';
 import TodoController from './services/TodoController';
+import useIntent from './services/useIntent';
 import useUserProfile from './services/useUserProfile';
 import recognitionData from './recognitionData';
 import { WebAppEventValue } from './types';
@@ -144,8 +145,9 @@ const createApp = (options?: CreateAppOptions) => {
     ],
 
     services: [
-      TodoController,
+      useIntent,
       useUserProfile,
+      TodoController,
       { provide: ServerDomain, withValue: DOMAIN },
       { provide: LineLiffId, withValue: LINE_LIFF_ID },
     ],

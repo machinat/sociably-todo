@@ -1,5 +1,4 @@
-import Machinat, { MachinatNode } from '@machinat/core';
-import { makeContainer } from '@machinat/core/service';
+import Machinat, { makeContainer, MachinatNode } from '@machinat/core';
 import * as Messenger from '@machinat/messenger/components';
 import * as Telegram from '@machinat/telegram/components';
 import * as Line from '@machinat/line/components';
@@ -18,10 +17,10 @@ const WithMenu = makeContainer({ deps: [ServerDomain, LineLiffId] })(
       );
 
       const listLabel = 'Show Todos 📑';
-      const listData = JSON.stringify({ type: 'list' });
+      const listData = JSON.stringify({ action: 'list' });
 
       const addLabel = 'New Todo ➕';
-      const addData = JSON.stringify({ type: 'add' });
+      const addData = JSON.stringify({ action: 'add' });
 
       const editLabel = 'Edit 📤';
 

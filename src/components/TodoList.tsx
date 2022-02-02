@@ -8,6 +8,9 @@ type TodoListTemplateProps = {
   todos: Todo[];
 };
 
+const finishTodoData = (todo: Todo) =>
+  JSON.stringify({ action: 'finish', id: todo.id });
+
 const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
   const finishLabel = 'Done ✓';
 
@@ -20,7 +23,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
             buttons={
               <Messenger.PostbackButton
                 title={finishLabel}
-                payload={JSON.stringify({ type: 'finish', id: todo.id })}
+                payload={finishTodoData(todo)}
               />
             }
           />
@@ -38,7 +41,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
               <Telegram.InlineKeyboard>
                 <Telegram.CallbackButton
                   text={finishLabel}
-                  data={JSON.stringify({ type: 'finish', id: todo.id })}
+                  data={finishTodoData(todo)}
                 />
               </Telegram.InlineKeyboard>
             }
@@ -61,7 +64,7 @@ const TodoListTemplate = ({ todos }: TodoListTemplateProps, { platform }) => {
               <Line.PostbackAction
                 label={finishLabel}
                 displayText={`Finish ${todo.name}`}
-                data={JSON.stringify({ type: 'finish', id: todo.id })}
+                data={finishTodoData(todo)}
               />
             }
           >

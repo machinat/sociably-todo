@@ -1,7 +1,7 @@
 {
   "name": "todo-example",
   "private": true,
-  "license" : "MIT",
+  "license": "MIT",
   "scripts": {
     "build": "npm run clean && npm run build:src && npm run build:webview",
     "build:src": "tsc",
@@ -16,20 +16,20 @@
     "start:production": "node ./lib/index.js"
   },
   "dependencies": {
-    "@machinat/core": "^0.5.0-beta.37",
-    "@machinat/dev-tools": "^0.5.0-beta.37",
+    "@machinat/core": "^0.5.0-beta.41",
+    "@machinat/dev-tools": "^0.5.0-beta.42",
     "@machinat/dialogflow": "^0.5.0-beta.37",
     "@machinat/http": "^0.5.0-beta.40",
-    "@machinat/line": "^0.5.0-beta.40",
-    "@machinat/messenger": "^0.5.0-beta.40",
+    "@machinat/line": "^0.5.0-beta.41",
+    "@machinat/messenger": "^0.5.0-beta.41",
     "@machinat/per-env": "^1.1.0",
     "@machinat/redis-state": "^0.5.0-beta.36",
-    "@machinat/script": "^0.5.0-beta.37",
+    "@machinat/script": "^0.5.0-beta.42",
     "@machinat/stream": "^0.5.0-beta.36",
-    "@machinat/telegram": "^0.5.0-beta.40",
-    "@machinat/webview": "^0.5.0-beta.40",
+    "@machinat/telegram": "^0.5.0-beta.41",
+    "@machinat/webview": "^0.5.0-beta.41",
     "commander": "^7.2.0",
-    "next": "^12.0.8",
+    "next": "^12.0.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "umzug": "^3.0.0"

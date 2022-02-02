@@ -1,15 +1,9 @@
 {
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "./src/webview/**/*"
-  ],
+  "include": ["./src/**/*"],
+  "exclude": ["./src/webview/**/*"],
   "compilerOptions": {
     "outDir": "./lib",
-    "lib": [
-      "es2018"
-    ],
+    "lib": ["es2018"],
     "module": "commonjs",
     "target": "es2018",
     "strictNullChecks": true,
@@ -20,9 +14,7 @@
     "skipLibCheck": true,
     "noUnusedLocals": true,
     "sourceMap": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "rootDir": "./src",
     "outDir": "./lib"
   }
