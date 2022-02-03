@@ -26,6 +26,7 @@ const client = new WebviewClient<
     }),
   ],
 });
+client.onError(console.error);
 
 const TodoRow = ({ todo, finished }: { todo: Todo; finished?: boolean }) => (
   <tr key={todo.id}>
