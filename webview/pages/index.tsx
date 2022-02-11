@@ -88,7 +88,7 @@ const WebAppHome = () => {
         const { todos, finishedTodos } = currentData;
         const { todo } = event.payload;
         const idx = todos.findIndex(({ id }) => id === todo.id);
-        console.log(todo, todos);
+
         return {
           ...currentData,
           todos:
@@ -124,7 +124,7 @@ const WebAppHome = () => {
           </thead>
           <tbody>
             {data?.todos.map((todo) => (
-              <TodoRow todo={todo} />
+              <TodoRow key={todo.id} todo={todo} />
             ))}
           </tbody>
         </table>
