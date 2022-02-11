@@ -26,18 +26,18 @@ const WithMenu = makeContainer({ deps: [ServerDomain, LineLiffId] })(
 
       if (platform === 'messenger') {
         return (
-          <Messenger.Expression>
+          <>
             {children}
             <Messenger.ButtonTemplate
               buttons={
                 <>
                   <Messenger.PostbackButton
-                    title={listLabel}
-                    payload={listData}
+                  title={addLabel}
+                  payload={addData}
                   />
                   <Messenger.PostbackButton
-                    title={addLabel}
-                    payload={addData}
+                    title={listLabel}
+                    payload={listData}
                   />
                   <Messenger.UrlButton
                     messengerExtensions
@@ -49,7 +49,7 @@ const WithMenu = makeContainer({ deps: [ServerDomain, LineLiffId] })(
             >
               {todoState}
             </Messenger.ButtonTemplate>
-          </Messenger.Expression>
+          </>
         );
       }
 
@@ -57,9 +57,9 @@ const WithMenu = makeContainer({ deps: [ServerDomain, LineLiffId] })(
         return (
           <Telegram.Expression
             replyMarkup={
-              <Telegram.ReplyKeyboard>
-                <Telegram.TextReply text={listLabel} />
+              <Telegram.ReplyKeyboard resizeKeyboard>
                 <Telegram.TextReply text={addLabel} />
+                <Telegram.TextReply text={listLabel} />
               </Telegram.ReplyKeyboard>
             }
           >
@@ -90,14 +90,14 @@ const WithMenu = makeContainer({ deps: [ServerDomain, LineLiffId] })(
               actions={
                 <>
                   <Line.PostbackAction
+                  label={addLabel}
+                  displayText={addLabel}
+                  data={addData}
+                  />
+                  <Line.PostbackAction
                     label={listLabel}
                     displayText={listLabel}
                     data={listData}
-                  />
-                  <Line.PostbackAction
-                    label={addLabel}
-                    displayText={addLabel}
-                    data={addData}
                   />
                   <Line.UriAction
                     label={editLabel}
