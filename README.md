@@ -9,7 +9,7 @@ Try the bot on these chat platforms:
 
 - Messenger (under verification)
 - [Telegram](https://t.me/MachinatTodoBot)
-- [LINE](https://line.me/ti/p/633hbuxh)
+- [LINE](https://line.me/ti/p/@633hbuxh)
 
 ## Getting Started
 
