@@ -24,7 +24,7 @@ const handleMessage = makeContainer({
       const intent = await getIntent(event);
 
       if (intent.type === 'add') {
-        return reply(<AddingTodo.Start channel={event.channel} />);
+        return reply(<AddingTodo.Start />);
       }
       if (intent.type === 'edit') {
         return reply(<EditCard />);
@@ -61,7 +61,7 @@ const handleMessage = makeContainer({
         return reply(
           <>
             {helloWords}
-            <AskingFirstTodo.Start channel={event.channel} />
+            <AskingFirstTodo.Start />
           </>
         );
       }

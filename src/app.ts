@@ -14,7 +14,6 @@ import Script from '@machinat/script';
 import AddingTodo from './scenes/AddingTodo';
 import AskingFirstTodo from './scenes/AskingFirstTodo';
 import nextConfigs from '../webview/next.config.js';
-import { ServerDomain, LineLiffId } from './interface';
 import TodoController from './services/TodoController';
 import useIntent from './services/useIntent';
 import useUserProfile from './services/useUserProfile';
@@ -22,7 +21,8 @@ import recognitionData from './recognitionData';
 import { WebAppEventValue } from './types';
 
 const {
-  // location
+  // basic
+  APP_NAME,
   NODE_ENV,
   PORT,
   DOMAIN,
@@ -35,6 +35,7 @@ const {
   MESSENGER_VERIFY_TOKEN,
   // telegram
   TELEGRAM_BOT_TOKEN,
+  TELEGRAM_BOT_NAME,
   TELEGRAM_SECRET_PATH,
   // line
   LINE_PROVIDER_ID,
@@ -99,7 +100,7 @@ const createApp = (options?: CreateAppOptions) => {
     platforms: [
       Messenger.initModule({
         webhookPath: '/webhook/messenger',
-        pageId: Number(MESSENGER_PAGE_ID),
+        pageId: MESSENGER_PAGE_ID,
         appSecret: MESSENGER_APP_SECRET,
         accessToken: MESSENGER_ACCESS_TOKEN,
         verifyToken: MESSENGER_VERIFY_TOKEN,
@@ -107,6 +108,7 @@ const createApp = (options?: CreateAppOptions) => {
 
       Telegram.initModule({
         webhookPath: '/webhook/telegram',
+        botName: TELEGRAM_BOT_NAME,
         botToken: TELEGRAM_BOT_TOKEN,
         secretPath: TELEGRAM_SECRET_PATH,
       }),
@@ -117,7 +119,7 @@ const createApp = (options?: CreateAppOptions) => {
         channelId: LINE_CHANNEL_ID,
         accessToken: LINE_ACCESS_TOKEN,
         channelSecret: LINE_CHANNEL_SECRET,
-        liffChannelIds: [LINE_LIFF_ID.split('-')[0]],
+        liffId: LINE_LIFF_ID,
       }),
 
       Webview.initModule<
@@ -128,12 +130,16 @@ const createApp = (options?: CreateAppOptions) => {
         webviewPath: '/webview',
 
         authSecret: WEBVIEW_AUTH_SECRET,
-        sameSite: 'none',
+        cookieSameSite: 'none',
         authPlatforms: [
           MessengerWebviewAuth,
           TelegramAuthenticator,
           LineAuthenticator,
         ],
+        basicAuth: {
+          appName: APP_NAME,
+          appImageUrl: 'https://machinat.com/img/logo.jpg',
+        },
 
         noNextServer: options?.noServer,
         nextServerOptions: {
@@ -144,13 +150,7 @@ const createApp = (options?: CreateAppOptions) => {
       }),
     ],
 
-    services: [
-      useIntent,
-      useUserProfile,
-      TodoController,
-      { provide: ServerDomain, withValue: DOMAIN },
-      { provide: LineLiffId, withValue: LINE_LIFF_ID },
-    ],
+    services: [useIntent, useUserProfile, TodoController],
   });
 };
 

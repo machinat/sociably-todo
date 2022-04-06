@@ -1,68 +1,51 @@
-import Machinat, { makeContainer } from '@machinat/core';
+import Machinat from '@machinat/core';
 import * as Messenger from '@machinat/messenger/components';
+import { WebviewButton as MessengerWebviewButton } from '@machinat/messenger/webview';
 import * as Telegram from '@machinat/telegram/components';
+import { WebviewButton as TelegramWebviewButton } from '@machinat/telegram/webview';
 import * as Line from '@machinat/line/components';
-import { ServerDomain, LineLiffId } from '../interface';
+import { WebviewAction as LineWebviewAction } from '@machinat/line/webview';
 
-const WithMenu = makeContainer({ deps: [ServerDomain, LineLiffId] })(
-  (serverDomain, lineLiffId) =>
-    (_, { platform }) => {
-      const msg = <>Edit your todos here 👇</>;
+const WithMenu = (_, { platform }) => {
+  const msg = <>Edit your todos here 👇</>;
 
-      const editLabel = 'Edit 📤';
+  const editLabel = 'Edit 📤';
 
-      if (platform === 'messenger') {
-        return (
-          <Messenger.ButtonTemplate
-            buttons={
-              <Messenger.UrlButton
-                messengerExtensions
-                title={editLabel}
-                url={`https://${serverDomain}/webview?platform=messenger`}
-              />
-            }
-          >
-            {msg}
-          </Messenger.ButtonTemplate>
-        );
-      }
+  if (platform === 'messenger') {
+    return (
+      <Messenger.ButtonTemplate
+        buttons={<MessengerWebviewButton title={editLabel} />}
+      >
+        {msg}
+      </Messenger.ButtonTemplate>
+    );
+  }
 
-      if (platform === 'telegram') {
-        return (
-          <Telegram.Text
-            replyMarkup={
-              <Telegram.InlineKeyboard>
-                <Telegram.UrlButton
-                  login
-                  text={editLabel}
-                  url={`https://${serverDomain}/auth/telegram`}
-                />
-              </Telegram.InlineKeyboard>
-            }
-          >
-            {msg}
-          </Telegram.Text>
-        );
-      }
+  if (platform === 'telegram') {
+    return (
+      <Telegram.Text
+        replyMarkup={
+          <Telegram.InlineKeyboard>
+            <TelegramWebviewButton text={editLabel} />
+          </Telegram.InlineKeyboard>
+        }
+      >
+        {msg}
+      </Telegram.Text>
+    );
+  }
 
-      if (platform === 'line') {
-        return (
-          <Line.ButtonTemplate
-            altText={(template) => template.text}
-            actions={
-              <Line.UriAction
-                label={editLabel}
-                uri={`https://liff.line.me/${lineLiffId}`}
-              />
-            }
-          >
-            {msg}
-          </Line.ButtonTemplate>
-        );
-      }
+  if (platform === 'line') {
+    return (
+      <Line.ButtonTemplate
+        altText={(template) => template.text}
+        actions={<LineWebviewAction label={editLabel} />}
+      >
+        {msg}
+      </Line.ButtonTemplate>
+    );
+  }
 
-      return <p>{msg}</p>;
-    }
-);
-
+  return <p>{msg}</p>;
+};
 export default WithMenu;

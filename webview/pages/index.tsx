@@ -2,31 +2,30 @@ import React from 'react';
 import Head from 'next/head';
 import getConfig from 'next/config';
 import WebviewClient, { useEventReducer } from '@machinat/webview/client';
-import MessengerClientAuthenticator from '@machinat/messenger/webview/client';
-import TelegramClientAuthenticator from '@machinat/telegram/webview/client';
-import LineClientAuthenticator from '@machinat/line/webview/client';
+import MessengerAuth from '@machinat/messenger/webview/client';
+import TelegramAuth from '@machinat/telegram/webview/client';
+import LineAuth from '@machinat/line/webview/client';
 import { Todo, TodoState, WebviewPush } from '../../src/types';
 
 const { publicRuntimeConfig } = getConfig();
 
 const client = new WebviewClient<
-  | MessengerClientAuthenticator
-  | TelegramClientAuthenticator
-  | LineClientAuthenticator,
+  MessengerAuth | TelegramAuth | LineAuth,
   WebviewPush
 >({
   mockupMode: typeof window === 'undefined',
   authPlatforms: [
-    new MessengerClientAuthenticator({
-      appId: publicRuntimeConfig.messengerAppId,
+    new MessengerAuth({
+      pageId: publicRuntimeConfig.messengerPageId,
     }),
-    new TelegramClientAuthenticator(),
-    new LineClientAuthenticator({
+    new TelegramAuth({
+      botName: publicRuntimeConfig.telegramBotName,
+    }),
+    new LineAuth({
       liffId: publicRuntimeConfig.lineLiffId,
     }),
   ],
 });
-client.onError(console.error);
 
 const TodoRow = ({ todo, finished }: { todo: Todo; finished?: boolean }) => (
   <tr key={todo.id}>
