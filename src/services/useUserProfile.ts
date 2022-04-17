@@ -12,7 +12,11 @@ const useUserProfile = makeFactoryProvider({
   deps: [BasicProfiler, StateController],
 })(
   (profiler, stateController) =>
-    async (user: MachinatUser): Promise<null | MachinatProfile> => {
+    async (user: MachinatUser | null): Promise<null | MachinatProfile> => {
+      if (!user) {
+        return null;
+      }
+
       let profile =
         (await stateController
           .userState(user)
