@@ -1,7 +1,7 @@
-import { makeContainer } from '@machinat/core';
-import Messenger from '@machinat/messenger';
-import Telegram from '@machinat/telegram';
-import Line from '@machinat/line';
+import { makeContainer } from '@sociably/core';
+import Messenger from '@sociably/messenger';
+import Telegram from '@sociably/telegram';
+import Line from '@sociably/line';
 
 const {
   DOMAIN,

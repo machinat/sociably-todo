@@ -1,14 +1,14 @@
-# Machinat Todo Example
+# Sociably Todo
 
 Managing todo list in chatting.
-> This is an example app built with [Machinat](https://machinat.com) framework.
+> This is an example app built with [Sociably](https://sociably.js.org) framework.
 
 ## Demo
 
 Try the bot on these chat platforms:
 
-- Messenger (under verification)
-- [Telegram](https://t.me/MachinatTodoBot)
+- [Messenger](https://m.me/SociablyTodo)
+- [Telegram](https://t.me/SociablyTodoBot)
 - [LINE](https://line.me/ti/p/@633hbuxh)
 
 ## Getting Started
@@ -60,8 +60,8 @@ The changes in codes will immediately reflect on the bot.
 
 ## Learn More
 
-Here are some resources to learn Machinat framework:
+Here are some resources to learn Sociably framework:
 
-- [Documents](https://machinat.com/doc) - complete guides by topics
-- [Tutorial](https://machinat.com/docs/learn) - a step-by-step tutorial to make an app
-- [API references](https://machinat.com/api) - detailed framework API
+- [Documents](https://sociably.js.org/doc) - complete guides by topics
+- [Tutorial](https://sociably.js.org/docs/learn) - a step-by-step tutorial to make an app
+- [API references](https://sociably.js.org/api) - detailed framework API

@@ -1,4 +1,4 @@
-import Machinat, { makeContainer } from '@machinat/core';
+import Sociably, { makeContainer } from '@sociably/core';
 import TodoController from '../services/TodoController';
 import useIntent from '../services/useIntent';
 import useUserProfile from '../services/useUserProfile';

@@ -1,8 +1,8 @@
 import {
   makeClassProvider,
   StateController,
-  MachinatChannel,
-} from '@machinat/core';
+  SociablyChannel,
+} from '@sociably/core';
 import { TodoState, Todo } from '../types';
 
 export class TodoController {
@@ -13,7 +13,7 @@ export class TodoController {
   }
 
   async getTodos(
-    channel: MachinatChannel
+    channel: SociablyChannel
   ): Promise<{ todo: null; data: TodoState }> {
     const data = await this.stateController
       .channelState(channel)
@@ -26,7 +26,7 @@ export class TodoController {
   }
 
   async addTodo(
-    channel: MachinatChannel,
+    channel: SociablyChannel,
     name: string
   ): Promise<{ todo: Todo; data: TodoState }> {
     const data = await this.stateController
@@ -46,7 +46,7 @@ export class TodoController {
   }
 
   async finishTodo(
-    channel: MachinatChannel,
+    channel: SociablyChannel,
     id: number
   ): Promise<{ todo: null | Todo; data: TodoState }> {
     let finishingTodo: null | Todo = null;
@@ -74,7 +74,7 @@ export class TodoController {
   }
 
   async updateTodo(
-    channel: MachinatChannel,
+    channel: SociablyChannel,
     id: number,
     name: string
   ): Promise<{ todo: null | Todo; data: TodoState }> {
@@ -108,7 +108,7 @@ export class TodoController {
   }
 
   async deleteTodo(
-    channel: MachinatChannel,
+    channel: SociablyChannel,
     id: number
   ): Promise<{ todo: null | Todo; data: TodoState }> {
     let deletingTodo: null | Todo = null;

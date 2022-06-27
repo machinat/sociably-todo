@@ -1,13 +1,13 @@
-import type { MessengerEventContext } from '@machinat/messenger';
-import type MessengerAuth from '@machinat/messenger/webview';
-import type { TelegramEventContext } from '@machinat/telegram';
-import type TelegramAuth from '@machinat/telegram/webview';
-import type { LineEventContext } from '@machinat/line';
-import type LineAuth from '@machinat/line/webview';
+import type { MessengerEventContext } from '@sociably/messenger';
+import type MessengerAuth from '@sociably/messenger/webview';
+import type { TelegramEventContext } from '@sociably/telegram';
+import type TelegramAuth from '@sociably/telegram/webview';
+import type { LineEventContext } from '@sociably/line';
+import type LineAuth from '@sociably/line/webview';
 import type {
   WebviewEventContext,
   ConnectionEventValue,
-} from '@machinat/webview';
+} from '@sociably/webview';
 
 export type ChatEventContext =
   | MessengerEventContext

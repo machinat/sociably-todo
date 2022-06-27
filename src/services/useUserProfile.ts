@@ -1,10 +1,10 @@
 import {
   makeFactoryProvider,
   BasicProfiler,
-  MachinatUser,
-  MachinatProfile,
+  SociablyUser,
+  SociablyProfile,
   StateController,
-} from '@machinat/core';
+} from '@sociably/core';
 
 const PROFILE_STATE_KEY = 'user_profile_cache';
 
@@ -12,7 +12,7 @@ const useUserProfile = makeFactoryProvider({
   deps: [BasicProfiler, StateController],
 })(
   (profiler, stateController) =>
-    async (user: MachinatUser | null): Promise<null | MachinatProfile> => {
+    async (user: SociablyUser | null): Promise<null | SociablyProfile> => {
       if (!user) {
         return null;
       }
@@ -20,7 +20,7 @@ const useUserProfile = makeFactoryProvider({
       let profile =
         (await stateController
           .userState(user)
-          .get<MachinatProfile>(PROFILE_STATE_KEY)) || null;
+          .get<SociablyProfile>(PROFILE_STATE_KEY)) || null;
 
       if (profile) {
         return profile;
@@ -33,7 +33,7 @@ const useUserProfile = makeFactoryProvider({
 
       await stateController
         .userState(user)
-        .set<MachinatProfile>(PROFILE_STATE_KEY, profile);
+        .set<SociablyProfile>(PROFILE_STATE_KEY, profile);
 
       return profile;
     }

@@ -1,8 +1,8 @@
-import Machinat, { makeContainer } from '@machinat/core';
-import { AnswerCallbackQuery } from '@machinat/telegram/components';
-import { Stream } from '@machinat/stream';
-import { filter } from '@machinat/stream/operators';
-import Script from '@machinat/script';
+import Sociably, { makeContainer } from '@sociably/core';
+import { AnswerCallbackQuery } from '@sociably/telegram/components';
+import { Stream } from '@sociably/stream';
+import { filter } from '@sociably/stream/operators';
+import Script from '@sociably/script';
 import handleChat from './handlers/handleChat';
 import handleWebview from './handlers/handleWebview';
 import type { AppEventContext, ChatEventContext } from './types';

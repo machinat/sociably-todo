@@ -1,4 +1,4 @@
-import { makeContainer } from '@machinat/core';
+import { makeContainer } from '@sociably/core';
 import TodoController from '../services/TodoController';
 import type { WebAppEventContext } from '../types';
 

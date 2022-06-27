@@ -5,10 +5,10 @@ import {
   useEventReducer,
   useClient,
   ClientEventContext,
-} from '@machinat/webview/client';
-import MessengerAuth from '@machinat/messenger/webview/client';
-import TelegramAuth from '@machinat/telegram/webview/client';
-import LineAuth from '@machinat/line/webview/client';
+} from '@sociably/webview/client';
+import MessengerAuth from '@sociably/messenger/webview/client';
+import TelegramAuth from '@sociably/telegram/webview/client';
+import LineAuth from '@sociably/line/webview/client';
 import { Todo, TodoState, WebviewPush } from '../../src/types';
 
 type WebviewEventContext = ClientEventContext<
